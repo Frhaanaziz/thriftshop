@@ -40,7 +40,7 @@ const NewStorePage = () => {
             if (!session) throw new Error('Session not found');
 
             const author_id = session.user.id;
-            await addStoreAction({ supabase, input: { author_id, name, description } });
+            await addStoreAction({ input: { author_id, name, description } });
 
             router.push('/dashboard/stores');
             router.refresh();

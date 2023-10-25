@@ -1,8 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import SelectStoreCombobox from './SelectStoreCombobox';
-import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
-import { getSession } from '@lib/getSession';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import LayoutNavList from './LayoutNavList';
@@ -15,14 +11,13 @@ type StoreManageProps = {
 };
 
 const StoreManageLayout = async ({ params: { storeId }, children }: StoreManageProps) => {
-    const supabase = createServerComponentClient<Database>({ cookies });
     const {
         data: { user },
-    } = await getUserAction({ supabase });
+    } = await getUserAction();
 
     const author_id = user.id;
 
-    const { data: stores, error } = await getUserStoresAction({ supabase, input: { author_id } });
+    const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
     if (error) throw new Error('Stores not found');
 
     const currentStore = stores.find((store) => store.id === storeId);

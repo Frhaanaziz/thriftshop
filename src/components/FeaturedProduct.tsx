@@ -8,7 +8,6 @@ import EmptyImage from './EmptyImage';
 
 type FeaturedProductProps = {
     product: Products['Row'];
-    // aspect?: { width: number; height: number };
 };
 
 const FeaturedProduct = ({ product }: FeaturedProductProps) => {
@@ -20,9 +19,9 @@ const FeaturedProduct = ({ product }: FeaturedProductProps) => {
             <AspectRatio ratio={3 / 2}>
                 {product.product_images ? (
                     <Image
-                        src={product.product_images?.at(0) ?? 'https://source.unsplash.com/random'}
+                        src={product.product_images.at(0)!}
                         alt={product.name}
-                        sizes="(min-width: 1024px) 30vw, (min-width: 768px) 35vw, (min-width: 640px) 40vw, (min-width: 475px) 50vw, 100vw"
+                        sizes="(min-width: 1024px) 15vw, (min-width: 768px) 25vw, (min-width: 640px) 30vw, (min-width: 475px) 35vw, 100vw"
                         fill
                     />
                 ) : (

@@ -2,22 +2,16 @@ import { DEFAULT_PROFILE_URL } from '@constant';
 import Image from 'next/image';
 import UpdateProfileButton from './UpdateProfileButton';
 import UpdateEmailButton from './UpdateEmailButton';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
-import { getSession } from '@lib/getSession';
 import { notFound } from 'next/navigation';
 import UpdateNameButton from './UpdateNameButton';
 import { getProfileAction, getUserAction } from '@app/_actions/user';
 
 const AccountPage = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
-
     const {
         data: { user },
-    } = await getUserAction({ supabase });
+    } = await getUserAction();
 
-    const { data: profile } = await getProfileAction({ supabase, user_id: user.id });
+    const { data: profile } = await getProfileAction({ user_id: user.id });
     if (!profile) notFound();
 
     return (

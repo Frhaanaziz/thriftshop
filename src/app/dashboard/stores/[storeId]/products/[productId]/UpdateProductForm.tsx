@@ -11,17 +11,16 @@ import { useForm } from 'react-hook-form';
 import { Textarea } from '@components/ui/textarea';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
 import ImageUploadFormField from '../new/ImageUploadFormField';
 import toast from 'react-hot-toast';
 import { updateProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@constant';
-import { deleteProductAction, updateProductAction, uploadProductImagesAction } from '@app/_actions/product';
+import { deleteProductAction, updateProductAction } from '@app/_actions/product';
 import { Products } from '@types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { catchError } from '@lib/utils';
+import { catchError, uploadProductImages } from '@lib/utils';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -36,10 +35,11 @@ const subCategoryValue = (value: string): string[] | undefined => {
 };
 
 const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
+    const supabase = createClientComponentClient();
+
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const supabase = createClientComponentClient<Database>();
     const router = useRouter();
 
     const form = useForm<z.infer<typeof updateProductSchema>>({
@@ -64,7 +64,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             setIsUpdating(true);
 
             if (formData.image.length > 0) {
-                const results = await uploadProductImagesAction({
+                const results = await uploadProductImages({
                     supabase,
                     files: formData.image,
                     storeId: product.store_id,
@@ -79,7 +79,6 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             }
 
             await updateProductAction({
-                supabase,
                 input: {
                     id: product.id,
                     author_id: product.author_id,
@@ -107,7 +106,6 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             setIsDeleting(true);
 
             await deleteProductAction({
-                supabase,
                 input: {
                     author_id: product.author_id,
                     id: product.id,

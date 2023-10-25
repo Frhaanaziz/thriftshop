@@ -1,7 +1,4 @@
 import UpdateStoreCard from './UpdateStoreCard';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
 import { notFound } from 'next/navigation';
 import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';
@@ -11,14 +8,13 @@ type StoreManageProps = {
 };
 
 const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
-    const supabase = createServerComponentClient<Database>({ cookies });
     const {
         data: { user },
-    } = await getUserAction({ supabase });
+    } = await getUserAction();
 
     const author_id = user.id;
 
-    const { data: stores, error } = await getUserStoresAction({ supabase, input: { author_id } });
+    const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
     if (error) throw new Error('stores not found');
 
     const currentStore = stores?.find((store) => store.id === storeId);

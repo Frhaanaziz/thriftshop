@@ -1,8 +1,6 @@
 'use client';
 import { Button, buttonVariants } from '@components/ui/button';
 import { Input } from '@components/ui/input';
-import { Database } from '@db/database.types';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -14,11 +12,7 @@ import { useEffect } from 'react';
 import { signUpSchema } from '@lib/validations/auth';
 import { signUpUserAction } from '@app/_actions/user';
 
-interface SignupFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
 export default function SignupForm() {
-    const supabase = createClientComponentClient<Database>();
-
     const form = useForm<z.infer<typeof signUpSchema>>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
@@ -43,7 +37,7 @@ export default function SignupForm() {
     async function onSubmit(formData: z.infer<typeof signUpSchema>) {
         try {
             const { email, password, fullName } = formData;
-            await signUpUserAction({ supabase, fullName, input: { email, password } });
+            await signUpUserAction({ fullName, input: { email, password } });
 
             toast.success('Check your email for confirmation');
         } catch (error: any) {

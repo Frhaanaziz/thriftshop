@@ -11,16 +11,15 @@ import { useForm } from 'react-hook-form';
 import { Textarea } from '@components/ui/textarea';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
 import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
-import { notFound, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { newProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@constant';
 import { getUserAction } from '@app/_actions/user';
-import { uploadProductAction, uploadProductImagesAction } from '@app/_actions/product';
-import { catchError } from '@lib/utils';
+import { uploadProductAction } from '@app/_actions/product';
+import { catchError, uploadProductImages } from '@lib/utils';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -35,8 +34,8 @@ const subCategoryValue = (value: string): string[] | undefined => {
 };
 
 const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
+    const supabase = createClientComponentClient();
     const router = useRouter();
-    const supabase = createClientComponentClient<Database>();
 
     const form = useForm<z.infer<typeof newProductSchema>>({
         resolver: zodResolver(newProductSchema),
@@ -58,11 +57,11 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
 
         const {
             data: { user },
-        } = await getUserAction({ supabase });
+        } = await getUserAction();
 
         try {
             if (formData.image.length > 0) {
-                const results = await uploadProductImagesAction({
+                const results = await uploadProductImages({
                     supabase,
                     files: formData.image,
                     storeId: store_id,
@@ -77,7 +76,6 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
             }
 
             await uploadProductAction({
-                supabase,
                 input: {
                     author_id: user.id,
                     store_id,

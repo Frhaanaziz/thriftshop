@@ -1,3 +1,5 @@
+import { Database } from '@db/database.types';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { type ClassValue, clsx } from 'clsx';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
@@ -111,3 +113,24 @@ export function catchError(err: unknown) {
         return toast.error('Something went wrong, please try again later.');
     }
 }
+
+export async function uploadProductImages({ supabase, files, storeId }: uploadProductImagesProps) {
+    const uploadPromises = files.map((file: File) => {
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${storeId}-${Math.random()}.${fileExt}`;
+
+        return supabase.storage.from('product_images').upload(filePath, file);
+    });
+
+    const results = await Promise.all(uploadPromises);
+    if (results.some((result) => result.error))
+        throw new Error('Something wrong when uploading product image');
+
+    return results;
+}
+
+type uploadProductImagesProps = {
+    supabase: SupabaseClient<Database>;
+    files: File[];
+    storeId: string;
+};

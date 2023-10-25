@@ -1,22 +1,29 @@
-import { Database } from '@db/database.types';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Profiles } from '@types';
+'use server';
 
-export async function getUserAction({ supabase }: getUserProps) {
+import { Database } from '@db/database.types';
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+import { Profiles } from '@types';
+import { revalidatePath } from 'next/cache';
+
+import { cookies } from 'next/headers';
+
+const supabase = createServerActionClient<Database>({ cookies });
+
+export async function getUserAction() {
     const result = await supabase.auth.getUser();
     if (result.error) throw result.error;
 
     return result;
 }
 
-export async function getProfileAction({ supabase, user_id }: GetProfileProps) {
+export async function getProfileAction({ user_id }: GetProfileProps) {
     const result = await supabase.from('profiles').select().eq('user_id', user_id).maybeSingle();
     if (result.error) throw result.error;
 
     return result;
 }
 
-export async function updateProfileAction({ profile, filePath, supabase }: UpdateProfileProps) {
+export async function updateProfileAction({ profile, filePath }: UpdateProfileProps) {
     const result = await supabase.from('profiles').upsert({
         ...profile,
         avatar_url: filePath
@@ -25,20 +32,11 @@ export async function updateProfileAction({ profile, filePath, supabase }: Updat
     });
     if (result.error) throw result.error;
 
+    revalidatePath('/dashboard/account');
     return result;
 }
 
-export async function uploadAvatarAction({ supabase, file, userId }: UploadAvatarProps) {
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${userId}-${Math.random()}.${fileExt}`;
-
-    const result = await supabase.storage.from('avatars').upload(filePath, file);
-    if (result.error) throw result.error;
-
-    return result;
-}
-
-export async function deleteAvatarAction({ supabase, profile }: DeleteAvatarProps) {
+export async function deleteAvatarAction({ profile }: DeleteAvatarProps) {
     const fileName = profile.avatar_url?.split('/avatars/')[1];
     if (!fileName) throw new Error('You dont have any avatar yet');
 
@@ -51,10 +49,11 @@ export async function deleteAvatarAction({ supabase, profile }: DeleteAvatarProp
     const avatarResult = await supabase.storage.from('avatars').remove([fileName]);
     if (avatarResult.error) throw avatarResult.error;
 
+    revalidatePath('/dashboard/account');
     return { profileResult, avatarResult };
 }
 
-export async function signUpUserAction({ supabase, input, fullName }: SignUpUserProps) {
+export async function signUpUserAction({ input, fullName }: SignUpUserProps) {
     const result = await supabase.auth.signUp({
         ...input,
         options: {
@@ -66,16 +65,17 @@ export async function signUpUserAction({ supabase, input, fullName }: SignUpUser
     return result;
 }
 
-export async function signInUserAction({ supabase, input }: SignInUserProps) {
+export async function signInUserAction({ input }: SignInUserProps) {
     const result = await supabase.auth.signInWithPassword({
         ...input,
     });
     if (result.error) throw result.error;
 
+    revalidatePath('/');
     return result;
 }
 
-export async function updateUserProfileAction({ supabase, input, user_id }: UpdateUserProfileProps) {
+export async function updateUserProfileAction({ input, user_id }: UpdateUserProfileProps) {
     const result = await supabase
         .from('profiles')
         .update({
@@ -87,7 +87,7 @@ export async function updateUserProfileAction({ supabase, input, user_id }: Upda
     return result;
 }
 
-export async function addUserProfileAction({ supabase, input, user_id }: AddUserProfileType) {
+export async function addUserProfileAction({ input, user_id }: AddUserProfileType) {
     const result = await supabase
         .from('profiles')
         .insert({
@@ -100,19 +100,16 @@ export async function addUserProfileAction({ supabase, input, user_id }: AddUser
 }
 
 type AddUserProfileType = {
-    supabase: SupabaseClient<Database>;
     input: Profiles['Insert'];
     user_id: string;
 };
 
 type UpdateUserProfileProps = {
-    supabase: SupabaseClient<Database>;
     input: Profiles['Update'];
     user_id: string;
 };
 
 type SignInUserProps = {
-    supabase: SupabaseClient<Database>;
     input: {
         email: string;
         password: string;
@@ -120,7 +117,6 @@ type SignInUserProps = {
 };
 
 type SignUpUserProps = {
-    supabase: SupabaseClient<Database>;
     input: {
         email: string;
         password: string;
@@ -129,27 +125,19 @@ type SignUpUserProps = {
 };
 
 type DeleteAvatarProps = {
-    supabase: SupabaseClient<Database>;
     profile: Profiles['Insert'];
 };
 
-type getUserProps = {
-    supabase: SupabaseClient<Database>;
-};
-
 type GetProfileProps = {
-    supabase: SupabaseClient<Database>;
     user_id: string;
 };
 
 interface UpdateProfileProps {
     profile: Profiles['Row'];
     filePath?: string;
-    supabase: SupabaseClient<Database>;
 }
 
 type UploadAvatarProps = {
-    supabase: SupabaseClient<Database>;
     file: File;
     userId: string;
 };

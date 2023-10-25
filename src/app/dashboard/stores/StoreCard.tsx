@@ -22,6 +22,7 @@ const StoreCard = ({ store }: StoreCardProps) => {
                                     Math.random() * 15
                                 )}.jpg`}
                                 alt="store profile"
+                                sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, 90vw"
                                 fill
                             />
                         </AspectRatio>

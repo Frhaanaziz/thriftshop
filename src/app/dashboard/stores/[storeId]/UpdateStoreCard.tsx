@@ -9,8 +9,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
 import toast from 'react-hot-toast';
 import { Stores } from '@types';
 import DeleteStoreButton from './DeleteStoreButton';
@@ -26,7 +24,6 @@ type UpdateStoreCardProps = {
 const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
     const { author_id, description, id, name } = currentStore;
 
-    const supabase = createClientComponentClient<Database>();
     const router = useRouter();
 
     const form = useForm<z.infer<typeof updateStoreSchema>>({
@@ -40,7 +37,7 @@ const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
 
     async function onSubmit(formData: z.infer<typeof updateStoreSchema>) {
         try {
-            await updateStoreAction({ supabase, input: { ...formData, author_id, id } });
+            await updateStoreAction({ input: { ...formData, author_id, id } });
 
             toast.success('Successfully update your store');
         } catch (error) {
@@ -50,7 +47,7 @@ const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
 
     async function handleDeleteStore() {
         try {
-            await deleteStoreAction({ supabase, input: { id, author_id } });
+            await deleteStoreAction({ input: { id, author_id } });
 
             router.replace('/dashboard/stores');
             router.refresh();

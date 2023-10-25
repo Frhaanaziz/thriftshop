@@ -87,7 +87,7 @@ const Navbar = () => {
                     {components.map((component, i) => {
                         if (i === 0)
                             return (
-                                <NavigationMenuItem>
+                                <NavigationMenuItem key={component.title}>
                                     <NavigationMenuTrigger>{component.title}</NavigationMenuTrigger>
                                     <NavigationMenuContent>
                                         <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">

@@ -1,7 +1,5 @@
 'use client';
 import { Button, buttonVariants } from '@components/ui/button';
-import { Database } from '@db/database.types';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +16,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { catchError } from '@lib/utils';
 
 const LogInForm = () => {
-    const supabase = createClientComponentClient<Database>();
     const router = useRouter();
 
     const form = useForm<z.infer<typeof emailSchema>>({
@@ -38,10 +35,9 @@ const LogInForm = () => {
     async function onSubmit(formData: z.infer<typeof emailSchema>) {
         const { email, password } = formData;
         try {
-            await signInUserAction({ supabase, input: { email, password } });
+            await signInUserAction({ input: { email, password } });
 
             router.replace('/', { scroll: false });
-            router.refresh();
             toast.success('Login successful');
         } catch (error) {
             catchError(error);

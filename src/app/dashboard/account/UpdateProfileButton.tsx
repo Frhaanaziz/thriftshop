@@ -2,8 +2,6 @@
 import { Button } from '@components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog';
 import { Separator } from '@components/ui/separator';
-import { Database } from '@db/database.types';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -22,8 +20,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { deleteAvatarAction, updateProfileAction, uploadAvatarAction } from '@app/_actions/user';
+import { deleteAvatarAction, updateProfileAction } from '@app/_actions/user';
 import { catchError } from '@lib/utils';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@db/database.types';
 
 interface Profile {
     user_id: string;
@@ -37,13 +37,11 @@ const UpdateProfileButton = ({ profile }: { profile: Profile }) => {
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const router = useRouter();
-    const supabase = createClientComponentClient<Database>();
 
     const removeAvatar = async () => {
         try {
-            await deleteAvatarAction({ supabase, profile });
+            await deleteAvatarAction({ profile });
 
-            router.refresh();
             toast.success('Avatar deleted successfully');
         } catch (error) {
             catchError(error);
@@ -116,8 +114,8 @@ const UploadDropzone = ({
     profile: Profile;
     isUploading: (isUploading: boolean) => void;
 }) => {
-    const router = useRouter();
     const supabase = createClientComponentClient<Database>();
+    const router = useRouter();
 
     return (
         <Dropzone
@@ -132,23 +130,19 @@ const UploadDropzone = ({
 
                     const file = acceptedFile.at(0)!;
 
-                    if (profile.avatar_url) await deleteAvatarAction({ supabase, profile });
+                    if (profile.avatar_url) await deleteAvatarAction({ profile });
 
-                    const {
-                        data: { path: filePath },
-                    } = await uploadAvatarAction({
-                        supabase,
-                        file,
-                        userId: profile.user_id,
-                    });
+                    const fileExt = file.name.split('.').pop();
+                    const filePath = `${profile.user_id}-${Math.random()}.${fileExt}`;
+
+                    const result = await supabase.storage.from('avatars').upload(filePath, file);
+                    if (result.error) throw result.error;
 
                     await updateProfileAction({
-                        supabase,
                         profile,
                         filePath,
                     });
 
-                    router.refresh();
                     toast.success('Avatar updated!');
                 } catch (error) {
                     catchError(error);

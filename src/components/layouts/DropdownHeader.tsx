@@ -10,20 +10,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DEFAULT_PROFILE_URL } from '@constant';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '@db/database.types';
 import Link from 'next/link';
 import { getProfileAction, getUserAction } from '@app/_actions/user';
 
-type DropdownHeaderProps = {
-    supabase: SupabaseClient<Database>;
-};
-
-const DropdownHeader = async ({ supabase }: DropdownHeaderProps) => {
+const DropdownHeader = async () => {
     const {
         data: { user },
-    } = await getUserAction({ supabase });
-    const { data: profile } = await getProfileAction({ supabase, user_id: user.id });
+    } = await getUserAction();
+    const { data: profile } = await getProfileAction({ user_id: user.id });
 
     return (
         <DropdownMenu>

@@ -42,10 +42,8 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
 
             await updateProfileAction({
                 profile: { ...profile, fullName: changedName },
-                supabase,
             });
 
-            router.refresh();
             toast.success('Update profile name successfully');
         } catch (error) {
             catchError(error);

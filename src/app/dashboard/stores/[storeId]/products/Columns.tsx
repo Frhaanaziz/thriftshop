@@ -1,6 +1,6 @@
 import { Checkbox } from '@components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, ChevronsUpDown, MoreHorizontal } from 'lucide-react';
+import { ChevronsUpDown, MoreHorizontal } from 'lucide-react';
 import { ColumnDef, Row } from '@tanstack/react-table';
 
 import {
@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Products } from '@types';
 import { formatDate } from '@lib/utils';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { deleteProductAction } from '@app/_actions/product';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -155,7 +154,6 @@ export const columns: ColumnDef<Products['Row']>[] = [
 function ActionCell({ row }: { row: Row<Products['Row']> }) {
     const product = row.original;
     const router = useRouter();
-    const supabase = createClientComponentClient();
 
     return (
         <DropdownMenu>
@@ -180,7 +178,6 @@ function ActionCell({ row }: { row: Row<Products['Row']> }) {
                     onClick={async () => {
                         const { author_id, id, store_id } = product;
                         const deleteProducts = deleteProductAction({
-                            supabase,
                             input: { author_id, id, store_id },
                         });
 

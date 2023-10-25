@@ -13,11 +13,12 @@ import { AddToCartForm } from './AddToCartForm';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import FeaturedProduct from '@components/FeaturedProduct';
+import { AspectRatio } from '@components/ui/aspect-ratio';
 
 const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
     const supabase = createServerComponentClient<Database>({ cookies });
 
-    const { data: product } = await getProductAction({ supabase, input: { id: productId } });
+    const { data: product } = await getProductAction({ input: { id: productId } });
     if (!product) notFound();
 
     const { data: store } = await supabase.from('stores').select('name').eq('id', product.store_id!).single();
@@ -56,11 +57,17 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
 
             <section className="flex flex-col gap-8 md:flex-row md:gap-16">
                 {product.product_images?.at(0) ? (
-                    <Image
-                        src={product.product_images.at(0)!}
-                        alt="random"
-                        fill
-                    />
+                    <div className="h-full w-full flex-1">
+                        <AspectRatio ratio={1 / 1}>
+                            <Image
+                                src={product.product_images.at(0)!}
+                                alt="random"
+                                sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 90vw"
+                                priority
+                                fill
+                            />
+                        </AspectRatio>
+                    </div>
                 ) : (
                     <EmptyImage />
                 )}

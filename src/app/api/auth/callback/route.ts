@@ -14,12 +14,11 @@ export async function GET(req: NextRequest) {
 
     const {
         data: { user },
-    } = await getUserAction({ supabase });
+    } = await getUserAction();
     if (!user.email) throw new Error('User email not found');
     if (!fullName) throw new Error('User full name not found');
 
     const {} = await addUserProfileAction({
-        supabase,
         user_id: user.id,
         input: { email: user.email, fullName },
     });

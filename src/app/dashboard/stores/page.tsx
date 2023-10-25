@@ -3,18 +3,13 @@ import { Rocket } from 'lucide-react';
 import Link from 'next/link';
 import StoreCard from './StoreCard';
 import { getUserStoresAction } from '@app/_actions/store';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
 import { getUserAction } from '@app/_actions/user';
 
 const StoresPage = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
     const {
         data: { user },
-    } = await getUserAction({ supabase });
+    } = await getUserAction();
     const { data: stores } = await getUserStoresAction({
-        supabase,
         input: { author_id: user.id },
     });
 
