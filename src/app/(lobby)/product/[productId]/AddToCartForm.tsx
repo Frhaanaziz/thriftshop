@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
+import { addToCartAction } from '@app/_actions/cart';
 
 interface AddToCartFormProps {
     productId: string;
@@ -36,10 +37,10 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
     function onSubmit(data: Inputs) {
         startTransition(async () => {
             try {
-                // await addToCartAction({
-                //     productId,
-                //     quantity: data.quantity,
-                // });
+                await addToCartAction({
+                    productId,
+                    quantity: data.quantity,
+                });
                 toast.success('Added to cart.');
             } catch (err) {
                 catchError(err);

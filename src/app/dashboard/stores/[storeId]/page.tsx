@@ -17,7 +17,7 @@ const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
     const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
     if (error) throw new Error('stores not found');
 
-    const currentStore = stores?.find((store) => store.id === storeId);
+    const currentStore = stores.find((store) => store.id === storeId);
 
     if (!stores || !currentStore) notFound();
 

@@ -37,7 +37,7 @@ export async function deleteProductAction({ input }: DeleteProductProps) {
 }
 
 export async function updateProductAction({ input }: UpdateProductProps) {
-    const result = await supabase.from('products').upsert(input).select();
+    const result = await supabase.from('products').upsert(input);
     if (result.error) throw result.error;
 
     return result;

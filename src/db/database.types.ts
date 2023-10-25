@@ -3,6 +3,24 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
     public: {
         Tables: {
+            carts: {
+                Row: {
+                    created_at: string;
+                    id: number;
+                    items: Json[] | null;
+                };
+                Insert: {
+                    created_at?: string;
+                    id?: number;
+                    items?: Json[] | null;
+                };
+                Update: {
+                    created_at?: string;
+                    id?: number;
+                    items?: Json[] | null;
+                };
+                Relationships: [];
+            };
             products: {
                 Row: {
                     author_id: string;
@@ -10,7 +28,7 @@ export interface Database {
                     created_at: string;
                     description: string | null;
                     id: string;
-                    inventory: number | null;
+                    inventory: number;
                     isPublic: boolean;
                     name: string;
                     price: number;
@@ -25,7 +43,7 @@ export interface Database {
                     created_at?: string;
                     description?: string | null;
                     id?: string;
-                    inventory?: number | null;
+                    inventory: number;
                     isPublic?: boolean;
                     name: string;
                     price: number;
@@ -40,7 +58,7 @@ export interface Database {
                     created_at?: string;
                     description?: string | null;
                     id?: string;
-                    inventory?: number | null;
+                    inventory?: number;
                     isPublic?: boolean;
                     name?: string;
                     price?: number;

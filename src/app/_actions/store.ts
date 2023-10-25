@@ -23,7 +23,7 @@ export async function addStoreAction({ input }: AddStoreProps) {
 }
 
 export async function updateStoreAction({ input }: UpdateStoreProps) {
-    const result = await supabase.from('stores').upsert(input).select();
+    const result = await supabase.from('stores').upsert(input);
     if (result.error?.code === '23505') throw new Error('The store name is already registered');
     if (result.error) throw result.error;
 
