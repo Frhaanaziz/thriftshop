@@ -23,6 +23,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { deleteAvatarAction, updateProfileAction, uploadAvatarAction } from '@app/_actions/user';
+import { catchError } from '@lib/utils';
 
 interface Profile {
     user_id: string;
@@ -44,9 +45,8 @@ const UpdateProfileButton = ({ profile }: { profile: Profile }) => {
 
             router.refresh();
             toast.success('Avatar deleted successfully');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     };
 
@@ -150,9 +150,8 @@ const UploadDropzone = ({
 
                     router.refresh();
                     toast.success('Avatar updated!');
-                } catch (error: any) {
-                    console.error(error);
-                    toast.error(error.message);
+                } catch (error) {
+                    catchError(error);
                 } finally {
                     isUploading(false);
                 }

@@ -19,6 +19,7 @@ import { Input } from '@components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { catchError } from '@lib/utils';
 
 type UpdateNameButtonProps = {
     profile: Profiles['Row'];
@@ -45,9 +46,8 @@ const UpdateEmailButton = ({ profile }: UpdateNameButtonProps) => {
             if (error) throw error;
 
             toast.success('Check your new email for confirmation');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 

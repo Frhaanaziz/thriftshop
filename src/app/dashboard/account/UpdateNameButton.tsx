@@ -20,6 +20,7 @@ import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { updateProfileAction } from '@app/_actions/user';
+import { catchError } from '@lib/utils';
 
 type UpdateNameButtonProps = {
     profile: Profiles['Row'];
@@ -46,9 +47,8 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
 
             router.refresh();
             toast.success('Update profile name successfully');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         } finally {
             setIsUpdating(false);
         }

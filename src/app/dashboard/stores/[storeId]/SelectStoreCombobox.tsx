@@ -62,12 +62,11 @@ const SelectStoreCombobox = ({ stores, currentStore }: SelectStoreComboboxProps)
                                 onSelect={async (currentValue) => {
                                     setValue(currentValue === value ? value : currentValue);
                                     setOpen(false);
-                                    const { data, error } = await supabase
+                                    const { data } = await supabase
                                         .from('stores')
                                         .select('id')
                                         .match({ author_id: store.author_id, name: store.name })
                                         .single();
-                                    if (error) console.error(error);
 
                                     if (currentValue !== value) router.push(`/dashboard/stores/${data?.id}`);
                                 }}

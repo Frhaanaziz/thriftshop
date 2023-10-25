@@ -2,7 +2,7 @@ import { updateUserProfileAction } from '@app/_actions/user';
 import { Database } from '@db/database.types';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -13,11 +13,8 @@ export async function GET(req: NextRequest) {
 
     if (!newEmail || !userId) notFound();
 
-    try {
-        await updateUserProfileAction({ supabase, user_id: userId, input: { email: newEmail } });
-    } catch (error) {
-        console.error(error);
-    }
+    const result = await updateUserProfileAction({ supabase, user_id: userId, input: { email: newEmail } });
+    if (result.error) throw new Error('Failed to update user profile');
 
     return NextResponse.redirect(new URL('/', req.url));
 }

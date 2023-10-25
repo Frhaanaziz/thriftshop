@@ -15,6 +15,7 @@ import { signInUserAction } from '@app/_actions/user';
 import { Input } from '@components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form';
+import { catchError } from '@lib/utils';
 
 const LogInForm = () => {
     const supabase = createClientComponentClient<Database>();
@@ -42,9 +43,8 @@ const LogInForm = () => {
             router.replace('/', { scroll: false });
             router.refresh();
             toast.success('Login successful');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 

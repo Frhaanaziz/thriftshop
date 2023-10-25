@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { newStoreSchema } from '@lib/validations/store';
 import { addStoreAction } from '@app/_actions/store';
+import { catchError } from '@lib/utils';
 
 const NewStorePage = () => {
     const supabase = createClientComponentClient<Database>();
@@ -44,9 +45,8 @@ const NewStorePage = () => {
             router.push('/dashboard/stores');
             router.refresh();
             toast.success('Successfully create your store');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 

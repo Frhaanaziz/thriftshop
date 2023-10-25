@@ -17,6 +17,7 @@ import DeleteStoreButton from './DeleteStoreButton';
 import { useRouter } from 'next/navigation';
 import { updateStoreSchema } from '@lib/validations/store';
 import { deleteStoreAction, updateStoreAction } from '@app/_actions/store';
+import { catchError } from '@lib/utils';
 
 type UpdateStoreCardProps = {
     currentStore: Stores['Row'];
@@ -42,9 +43,8 @@ const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
             await updateStoreAction({ supabase, input: { ...formData, author_id, id } });
 
             toast.success('Successfully update your store');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 
@@ -55,9 +55,8 @@ const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
             router.replace('/dashboard/stores');
             router.refresh();
             toast.success('Successfully deleted your store');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 

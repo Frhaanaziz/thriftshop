@@ -21,6 +21,7 @@ import { deleteProductAction, updateProductAction, uploadProductImagesAction } f
 import { Products } from '@types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { catchError } from '@lib/utils';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -94,9 +95,8 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             });
 
             toast.success('Successfully create your product');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         } finally {
             setIsUpdating(false);
         }
@@ -118,9 +118,8 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             toast.success('Product deleted successfully');
             router.replace(`/dashboard/stores/${product.store_id}/products`);
             router.refresh();
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         } finally {
             setIsDeleting(false);
         }

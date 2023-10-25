@@ -23,7 +23,7 @@ const StoreManageLayout = async ({ params: { storeId }, children }: StoreManageP
     const author_id = user.id;
 
     const { data: stores, error } = await getUserStoresAction({ supabase, input: { author_id } });
-    if (error) console.error(error);
+    if (error) throw new Error('Stores not found');
 
     const currentStore = stores.find((store) => store.id === storeId);
 

@@ -12,21 +12,17 @@ export async function GET(req: NextRequest) {
         await supabase.auth.exchangeCodeForSession(code);
     }
 
-    try {
-        const {
-            data: { user },
-        } = await getUserAction({ supabase });
-        if (!user.email) throw new Error('User email not found');
-        if (!fullName) throw new Error('User full name not found');
+    const {
+        data: { user },
+    } = await getUserAction({ supabase });
+    if (!user.email) throw new Error('User email not found');
+    if (!fullName) throw new Error('User full name not found');
 
-        const {} = await addUserProfileAction({
-            supabase,
-            user_id: user.id,
-            input: { email: user.email, fullName },
-        });
-    } catch (error) {
-        console.error(error);
-    }
+    const {} = await addUserProfileAction({
+        supabase,
+        user_id: user.id,
+        input: { email: user.email, fullName },
+    });
 
     return NextResponse.redirect(new URL('/', req.url));
 }

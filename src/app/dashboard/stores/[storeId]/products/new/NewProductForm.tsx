@@ -20,6 +20,7 @@ import { newProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@constant';
 import { getUserAction } from '@app/_actions/user';
 import { uploadProductAction, uploadProductImagesAction } from '@app/_actions/product';
+import { catchError } from '@lib/utils';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -93,9 +94,8 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
             reset();
             router.refresh();
             toast.success('Successfully create your product');
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message);
+        } catch (error) {
+            catchError(error);
         }
     }
 
