@@ -3,14 +3,14 @@ import { AspectRatio } from './ui/aspect-ratio';
 import { Products } from '@types';
 import { formatPrice } from '@lib/utils';
 import Link from 'next/link';
-import { Button } from './ui/button';
 import EmptyImage from './EmptyImage';
+import AddToCartButton from './AddToCartButton';
 
 type FeaturedProductProps = {
     product: Products['Row'];
 };
 
-const FeaturedProduct = ({ product }: FeaturedProductProps) => {
+const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
     return (
         <Link
             href={`/product/${product.id}`}
@@ -34,12 +34,7 @@ const FeaturedProduct = ({ product }: FeaturedProductProps) => {
                 <p className="mb-5 font-normal text-gray-700 dark:text-gray-400">
                     {formatPrice(product.price)}
                 </p>
-                <Button
-                    className="w-full"
-                    size="sm"
-                >
-                    Add to cart
-                </Button>
+                <AddToCartButton productId={product.id} />
             </div>
         </Link>
     );

@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
+import { useId, useTransition } from 'react';
 
 interface AddToCartFormProps {
     productId: string;
@@ -24,8 +24,8 @@ export const updateCartItemSchema = z.object({
 type Inputs = z.infer<typeof updateCartItemSchema>;
 
 export function AddToCartForm({ productId }: AddToCartFormProps) {
-    const id = React.useId();
-    const [isPending, startTransition] = React.useTransition();
+    const id = useId();
+    const [isPending, startTransition] = useTransition();
 
     const form = useForm<Inputs>({
         resolver: zodResolver(updateCartItemSchema),
