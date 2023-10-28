@@ -28,6 +28,7 @@ export async function uploadProductAction({ input }: UploadProductProps) {
     const result = await supabase.from('products').insert(input);
     if (result.error) throw result.error;
 
+    revalidatePath('/dashboard/stores/[storeId]/products', 'page');
     return result;
 }
 

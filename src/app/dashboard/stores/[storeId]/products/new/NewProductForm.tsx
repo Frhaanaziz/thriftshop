@@ -13,7 +13,7 @@ import { Textarea } from '@components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { newProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@constant';
 import { getUserAction } from '@app/_actions/user';
@@ -37,8 +37,6 @@ const subCategoryValue = (value: string): string[] | undefined => {
 const supabase = createClientComponentClient<Database>();
 
 const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
-    const router = useRouter();
-
     const form = useForm<z.infer<typeof newProductSchema>>({
         resolver: zodResolver(newProductSchema),
         defaultValues: {
@@ -92,7 +90,6 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
             });
 
             reset();
-            router.refresh();
             toast.success('Successfully create your product');
         } catch (error) {
             catchError(error);
