@@ -9,9 +9,10 @@ import { categories, sub_category } from '@constant';
 import { Products } from '@types';
 import { useState } from 'react';
 
+const supabase = createClientComponentClient<Database>();
+
 const UploadDummyDataButton = ({ user }: { user: User }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const supabase = createClientComponentClient<Database>();
 
     return (
         <Button

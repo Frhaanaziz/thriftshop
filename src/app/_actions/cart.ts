@@ -9,9 +9,9 @@ import { Database } from '@db/database.types';
 import { cartItemSchema } from '@lib/validations/cart';
 import { CartItem } from '@types';
 
-const supabase = createServerActionClient<Database>({ cookies });
-
 export async function addToCartAction(input: z.infer<typeof cartItemSchema>) {
+    const supabase = createServerActionClient<Database>({ cookies });
+
     // Checking if product is in stock
     const { data: product } = await supabase
         .from('products')
