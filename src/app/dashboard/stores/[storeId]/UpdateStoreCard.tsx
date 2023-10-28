@@ -50,7 +50,6 @@ const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
             await deleteStoreAction({ input: { id, author_id } });
 
             router.replace('/dashboard/stores');
-            router.refresh();
             toast.success('Successfully deleted your store');
         } catch (error) {
             catchError(error);

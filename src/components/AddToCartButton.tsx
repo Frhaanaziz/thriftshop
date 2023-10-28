@@ -1,37 +1,39 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import toast from 'react-hot-toast';
-import { catchError } from '@lib/utils';
+import { catchError, cn } from '@lib/utils';
 import { addToCartAction } from '@app/_actions/cart';
 import { Loader2 } from 'lucide-react';
 
-const AddToCartButton = ({ productId }: { productId: string }) => {
-    const [isPending, startTransition] = useTransition();
+const AddToCartButton = ({ productId, className }: { productId: string; className?: string }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    function handleAddToCart() {
-        startTransition(async () => {
-            try {
-                await addToCartAction({
-                    productId,
-                    quantity: 1,
-                });
-                toast.success('Added to cart.');
-            } catch (err) {
-                catchError(err);
-            }
-        });
+    async function handleAddToCart() {
+        try {
+            setIsLoading(true);
+
+            await addToCartAction({
+                productId,
+                quantity: 1,
+            });
+            toast.success('Added to cart.');
+        } catch (err) {
+            catchError(err);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
         <Button
-            className="w-full"
+            className={cn(className, 'w-full')}
             size="sm"
-            disabled={isPending}
+            disabled={isLoading}
             onClick={handleAddToCart}
         >
-            {isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Add to cart
+            {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Add to cart
         </Button>
     );
 };

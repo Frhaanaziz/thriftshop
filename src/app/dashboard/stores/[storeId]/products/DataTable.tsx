@@ -1,6 +1,7 @@
 'use client';
 
 import {
+    ColumnDef,
     ColumnFiltersState,
     SortingState,
     VisibilityState,
@@ -32,12 +33,18 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Products } from '@types';
 
-export function DataTable({ data, columns }) {
+export function DataTable({
+    data,
+    columns,
+}: {
+    data: Products['Row'][];
+    columns: ColumnDef<Products['Row']>[];
+}) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

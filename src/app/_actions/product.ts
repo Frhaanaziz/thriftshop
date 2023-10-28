@@ -3,6 +3,7 @@
 import { Database } from '@db/database.types';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { Products } from '@types';
+import { revalidatePath } from 'next/cache';
 
 import { cookies } from 'next/headers';
 
@@ -29,10 +30,11 @@ export async function uploadProductAction({ input }: UploadProductProps) {
     return result;
 }
 
-export async function deleteProductAction({ input }: DeleteProductProps) {
+export async function deleteProductAction({ input, path }: DeleteProductProps) {
     const result = await supabase.from('products').delete().match(input);
     if (result.error) throw result.error;
 
+    path && revalidatePath(path);
     return result;
 }
 
@@ -53,6 +55,7 @@ type DeleteProductProps = {
         author_id: string;
         store_id: string;
     };
+    path?: string;
 };
 
 type getProductProps = {

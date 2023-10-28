@@ -38,7 +38,7 @@ const Header = async () => {
                             Sign In
                         </Link>
                     ) : (
-                        <DropdownHeader supabase={supabase} />
+                        <DropdownHeader />
                     )}
                 </div>
             </div>

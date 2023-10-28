@@ -15,7 +15,7 @@ import { Products } from '@types';
 import { formatDate } from '@lib/utils';
 import { deleteProductAction } from '@app/_actions/product';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 export const columns: ColumnDef<Products['Row']>[] = [
@@ -153,7 +153,7 @@ export const columns: ColumnDef<Products['Row']>[] = [
 
 function ActionCell({ row }: { row: Row<Products['Row']> }) {
     const product = row.original;
-    const router = useRouter();
+    const path = usePathname();
 
     return (
         <DropdownMenu>
@@ -179,15 +179,13 @@ function ActionCell({ row }: { row: Row<Products['Row']> }) {
                         const { author_id, id, store_id } = product;
                         const deleteProducts = deleteProductAction({
                             input: { author_id, id, store_id },
+                            path,
                         });
-
                         toast.promise(deleteProducts, {
                             loading: 'Deleting...',
                             success: 'Product deleted successfully',
                             error: 'Something wrong, please try again',
                         });
-
-                        router.refresh();
                     }}
                 >
                     Delete

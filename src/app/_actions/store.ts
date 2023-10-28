@@ -3,6 +3,7 @@
 import { Database } from '@db/database.types';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { Stores } from '@types';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 const supabase = createServerActionClient<Database>({ cookies });
@@ -34,6 +35,7 @@ export async function deleteStoreAction({ input }: DeleteStoreProps) {
     const result = await supabase.from('stores').delete().match(input);
     if (result.error) throw result.error;
 
+    revalidatePath('/dashboard/stores');
     return result;
 }
 

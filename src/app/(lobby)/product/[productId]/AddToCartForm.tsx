@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
-import { useId, useTransition } from 'react';
+import { useId, useState } from 'react';
 
 interface AddToCartFormProps {
     productId: string;
@@ -25,8 +25,7 @@ type Inputs = z.infer<typeof updateCartItemSchema>;
 
 export function AddToCartForm({ productId }: AddToCartFormProps) {
     const id = useId();
-    const [isPending, startTransition] = useTransition();
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const form = useForm<Inputs>({
         resolver: zodResolver(updateCartItemSchema),
         defaultValues: {
@@ -34,18 +33,20 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
         },
     });
 
-    function onSubmit(data: Inputs) {
-        startTransition(async () => {
-            try {
-                await addToCartAction({
-                    productId,
-                    quantity: data.quantity,
-                });
-                toast.success('Added to cart.');
-            } catch (err) {
-                catchError(err);
-            }
-        });
+    async function onSubmit(data: Inputs) {
+        try {
+            setIsLoading(true);
+
+            await addToCartAction({
+                productId,
+                quantity: data.quantity,
+            });
+            toast.success('Added to cart.');
+        } catch (err) {
+            catchError(err);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -62,7 +63,7 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                         size="icon"
                         className="h-8 w-8 rounded-r-none"
                         onClick={() => form.setValue('quantity', Math.max(0, form.getValues('quantity') - 1))}
-                        disabled={isPending}
+                        disabled={isLoading}
                     >
                         <MinusIcon
                             className="h-3 w-3"
@@ -102,7 +103,7 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                         size="icon"
                         className="h-8 w-8 rounded-l-none"
                         onClick={() => form.setValue('quantity', form.getValues('quantity') + 1)}
-                        disabled={isPending}
+                        disabled={isLoading}
                     >
                         <PlusIcon
                             className="h-3 w-3"
@@ -114,9 +115,9 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                 <Button
                     type="submit"
                     size="sm"
-                    disabled={isPending}
+                    disabled={isLoading}
                 >
-                    {isPending && (
+                    {isLoading && (
                         <Loader2
                             className="mr-2 h-4 w-4 animate-spin"
                             aria-hidden="true"

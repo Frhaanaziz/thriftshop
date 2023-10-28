@@ -111,11 +111,11 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                     id: product.id,
                     store_id: product.store_id,
                 },
+                // path: `/dashboard/stores/${product.store_id}/products`,
             });
 
-            toast.success('Product deleted successfully');
             router.replace(`/dashboard/stores/${product.store_id}/products`);
-            router.refresh();
+            toast.success('Product deleted successfully');
         } catch (error) {
             catchError(error);
         } finally {
