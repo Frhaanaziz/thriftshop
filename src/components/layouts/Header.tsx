@@ -2,7 +2,7 @@ import { buttonVariants } from '../ui/button';
 import HeaderSheet from './HeaderSheet';
 import Navbar from './Navbar';
 import SearchHeader from '../SearchHeader';
-import CartHeader from '../CartHeader';
+import CartHeader from '../cart/CartHeader';
 import Link from 'next/link';
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';

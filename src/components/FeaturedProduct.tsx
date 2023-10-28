@@ -4,7 +4,7 @@ import { Products } from '@types';
 import { formatPrice } from '@lib/utils';
 import Link from 'next/link';
 import EmptyImage from './EmptyImage';
-import AddToCartButton from './AddToCartButton';
+import AddToCartButton from './cart/AddToCartButton';
 
 type FeaturedProductProps = {
     product: Products['Row'];
@@ -28,7 +28,7 @@ const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
                 </AspectRatio>
 
                 <div className="p-4">
-                    <h3 className="text-xl font-semibold">{product.name}</h3>
+                    <h3 className="text-xl font-semibold truncate">{product.name}</h3>
                     <p className="mb-5 font-normal text-gray-700 dark:text-gray-400">
                         {formatPrice(product.price)}
                     </p>

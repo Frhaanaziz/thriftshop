@@ -5,7 +5,6 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import CategoriesPagination from './CategoriesPagination';
-import { count } from 'console';
 
 interface CategoryPageProps {
     params: {

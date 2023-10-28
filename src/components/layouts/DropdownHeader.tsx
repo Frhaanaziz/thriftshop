@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DEFAULT_PROFILE_URL } from '@constant';
+import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Link from 'next/link';
 import { getProfileAction, getUserAction } from '@app/_actions/user';
 

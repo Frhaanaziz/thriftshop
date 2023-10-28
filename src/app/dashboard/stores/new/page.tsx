@@ -43,7 +43,6 @@ const NewStorePage = () => {
             await addStoreAction({ input: { author_id, name, description } });
 
             router.push('/dashboard/stores');
-            router.refresh();
             toast.success('Successfully create your store');
         } catch (error) {
             catchError(error);

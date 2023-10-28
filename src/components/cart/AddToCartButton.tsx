@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import toast from 'react-hot-toast';
 import { catchError, cn } from '@lib/utils';
 import { addToCartAction } from '@app/_actions/cart';

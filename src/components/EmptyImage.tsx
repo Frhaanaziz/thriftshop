@@ -1,6 +1,6 @@
 const EmptyImage = () => {
     return (
-        <div className="flex aspect-square h-full w-full flex-1 items-center justify-center bg-secondary">
+        <div className="flex aspect-square h-full w-full flex-1 items-center justify-center bg-secondary rounded">
             <svg
                 width="15"
                 height="15"

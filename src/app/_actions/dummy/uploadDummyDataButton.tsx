@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { Button } from '@components/ui/button';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import toast from 'react-hot-toast';
-import { categories, sub_category } from '@constant';
+import { categories, sub_category } from '@lib/constant';
 import { Products } from '@types';
 import { useState } from 'react';
 

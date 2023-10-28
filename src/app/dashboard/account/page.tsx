@@ -1,4 +1,4 @@
-import { DEFAULT_PROFILE_URL } from '@constant';
+import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Image from 'next/image';
 import UpdateProfileButton from './UpdateProfileButton';
 import UpdateEmailButton from './UpdateEmailButton';

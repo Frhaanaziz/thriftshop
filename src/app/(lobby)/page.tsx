@@ -9,6 +9,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { Database } from '@db/database.types';
 import { productCategories } from '@config/products';
+import { Products, Stores } from '@types';
 
 export default async function Home() {
     const supabase = createServerComponentClient<Database>({ cookies });
@@ -20,7 +21,7 @@ export default async function Home() {
         <div className="container mb-14">
             <div className="my-28 flex flex-col items-center">
                 <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center">
-                    <Balancer>{siteConfig.description}</Balancer>
+                    {siteConfig.description}
                 </h1>
 
                 <p className="text-muted-foreground text-center text-lg lg:text-2xl my-5">
@@ -64,8 +65,8 @@ export default async function Home() {
                     <Button>View all</Button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 xl:grid-cols-4">
-                    {products?.map((product) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:grid-cols-4">
+                    {products?.map((product: Products['Row']) => (
                         <FeaturedProduct
                             key={product.id}
                             product={product}
@@ -81,7 +82,7 @@ export default async function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 xl:grid-cols-4 ">
-                    {stores?.map((store, i) => (
+                    {stores?.map((store: Stores['Row'], i: number) => (
                         <FeaturedStore
                             key={store.id}
                             store={store}

@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ImageUploadFormField from '../new/ImageUploadFormField';
 import toast from 'react-hot-toast';
 import { updateProductSchema } from '@lib/validations/product';
-import { categories, sub_category } from '@constant';
+import { categories, sub_category } from '@lib/constant';
 import { deleteProductAction, updateProductAction } from '@app/_actions/product';
 import { Products } from '@types';
 import { useRouter } from 'next/navigation';

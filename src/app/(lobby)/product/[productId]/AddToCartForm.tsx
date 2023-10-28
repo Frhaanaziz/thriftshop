@@ -12,14 +12,11 @@ import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
 import { useId, useState } from 'react';
+import { updateCartItemSchema } from '@lib/validations/cart';
 
 interface AddToCartFormProps {
     productId: string;
 }
-
-export const updateCartItemSchema = z.object({
-    quantity: z.number().min(0).default(1),
-});
 
 type Inputs = z.infer<typeof updateCartItemSchema>;
 
@@ -112,6 +109,7 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                         <span className="sr-only">Add one item</span>
                     </Button>
                 </div>
+
                 <Button
                     type="submit"
                     size="sm"

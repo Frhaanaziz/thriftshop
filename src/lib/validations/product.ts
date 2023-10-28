@@ -1,4 +1,4 @@
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, categories, sub_category } from '@constant';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, categories, sub_category } from '@lib/constant';
 import z from 'zod';
 
 export const newProductSchema = z

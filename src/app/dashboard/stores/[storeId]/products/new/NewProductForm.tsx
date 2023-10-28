@@ -15,7 +15,7 @@ import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
 import { usePathname, useRouter } from 'next/navigation';
 import { newProductSchema } from '@lib/validations/product';
-import { categories, sub_category } from '@constant';
+import { categories, sub_category } from '@lib/constant';
 import { getUserAction } from '@app/_actions/user';
 import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
