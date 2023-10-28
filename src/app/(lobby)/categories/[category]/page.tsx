@@ -5,6 +5,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import CategoriesPagination from './CategoriesPagination';
+import { count } from 'console';
 
 interface CategoryPageProps {
     params: {
@@ -15,9 +16,9 @@ interface CategoryPageProps {
     };
 }
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
+    const supabase = createServerComponentClient<Database>({ cookies });
+
     const { category } = params;
     const { page, per_page, sort, subcategories, price_range, store_ids, store_page } = searchParams;
 

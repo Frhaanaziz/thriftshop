@@ -9,9 +9,9 @@ import { productCategories } from '@config/products';
 import Icon from './Icon';
 import Link from 'next/link';
 
-const supabase = createServerComponentClient<Database>({ cookies });
-
 const CategoriesCard = async () => {
+    const supabase = createServerComponentClient<Database>({ cookies });
+
     const counts = await Promise.all(
         categories.map((category) => {
             return supabase
