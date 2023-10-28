@@ -10,8 +10,9 @@ import { cookies } from 'next/headers';
 import { Database } from '@db/database.types';
 import { productCategories } from '@config/products';
 
+const supabase = createServerComponentClient<Database>({ cookies });
+
 export default async function Home() {
-    const supabase = createServerComponentClient<Database>({ cookies });
     const { data: products } = await supabase.from('products').select().limit(8);
     const { data: stores } = await supabase.from('stores').select().limit(4);
 

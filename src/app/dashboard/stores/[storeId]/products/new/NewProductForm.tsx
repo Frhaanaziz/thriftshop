@@ -20,6 +20,7 @@ import { getUserAction } from '@app/_actions/user';
 import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@db/database.types';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -33,8 +34,9 @@ const subCategoryValue = (value: string): string[] | undefined => {
     return subCategoryy;
 };
 
+const supabase = createClientComponentClient<Database>();
+
 const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
-    const supabase = createClientComponentClient();
     const router = useRouter();
 
     const form = useForm<z.infer<typeof newProductSchema>>({

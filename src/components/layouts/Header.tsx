@@ -12,8 +12,9 @@ import { getSession } from '@lib/getSession';
 import DropdownHeader from './DropdownHeader';
 import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
 
+const supabase = createServerComponentClient<Database>({ cookies });
+
 const Header = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
     const {
         data: { session },
     } = await getSession({ supabase });
