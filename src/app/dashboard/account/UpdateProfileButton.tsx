@@ -107,6 +107,8 @@ const UpdateProfileButton = ({ profile }: { profile: Profile }) => {
 
 export default UpdateProfileButton;
 
+const supabase = createClientComponentClient<Database>();
+
 const UploadDropzone = ({
     profile,
     isUploading,
@@ -114,9 +116,6 @@ const UploadDropzone = ({
     profile: Profile;
     isUploading: (isUploading: boolean) => void;
 }) => {
-    const supabase = createClientComponentClient<Database>();
-    const router = useRouter();
-
     return (
         <Dropzone
             multiple={false}

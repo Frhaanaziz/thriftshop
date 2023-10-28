@@ -15,11 +15,11 @@ interface CategoryPageProps {
     };
 }
 
+const supabase = createServerComponentClient<Database>({ cookies });
+
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
     const { category } = params;
     const { page, per_page, sort, subcategories, price_range, store_ids, store_page } = searchParams;
-
-    const supabase = createServerComponentClient<Database>({ cookies });
 
     const limit = typeof per_page === 'string' ? parseInt(per_page) : 11;
     const from = typeof page === 'string' ? (parseInt(page) - 1) * limit : 0;

@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '@db/database.types';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -34,9 +35,9 @@ const subCategoryValue = (value: string): string[] | undefined => {
     return subCategoryy;
 };
 
-const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
-    const supabase = createClientComponentClient();
+const supabase = createClientComponentClient<Database>();
 
+const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 

@@ -1,7 +1,5 @@
 'use client';
 import { Button } from '@components/ui/button';
-import { Database } from '@db/database.types';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Profiles } from '@types';
 import { FormEvent, useState } from 'react';
 
@@ -18,7 +16,6 @@ import { Label } from '@components/ui/label';
 import { Input } from '@components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { updateProfileAction } from '@app/_actions/user';
 import { catchError } from '@lib/utils';
 
@@ -30,8 +27,6 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
     const [changedName, setChangedName] = useState<string>(profile?.fullName);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const router = useRouter();
-    const supabase = createClientComponentClient<Database>();
 
     async function handleUpdateProfileName(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();

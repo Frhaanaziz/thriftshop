@@ -1,6 +1,7 @@
 import { Database } from '@db/database.types';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { type ClassValue, clsx } from 'clsx';
+
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 
