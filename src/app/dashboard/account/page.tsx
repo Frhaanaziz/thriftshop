@@ -1,9 +1,9 @@
 import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Image from 'next/image';
-import UpdateProfileButton from './UpdateProfileButton';
-import UpdateEmailButton from './UpdateEmailButton';
+import UpdateProfileButton from '../../../components/account/UpdateProfileButton';
+import UpdateEmailButton from '../../../components/account/UpdateEmailButton';
 import { notFound } from 'next/navigation';
-import UpdateNameButton from './UpdateNameButton';
+import UpdateNameButton from '../../../components/account/UpdateNameButton';
 import { getProfileAction, getUserAction } from '@app/_actions/user';
 
 const AccountPage = async () => {

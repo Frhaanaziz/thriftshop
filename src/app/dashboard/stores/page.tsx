@@ -1,7 +1,7 @@
 import { buttonVariants } from '@components/ui/button';
 import { Rocket } from 'lucide-react';
 import Link from 'next/link';
-import StoreCard from './StoreCard';
+import StoreCard from '../../../components/cards/StoreCard';
 import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';
 

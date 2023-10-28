@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { Textarea } from '@components/ui/textarea';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ImageUploadFormField from '../new/ImageUploadFormField';
+import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
 import { updateProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@lib/constant';

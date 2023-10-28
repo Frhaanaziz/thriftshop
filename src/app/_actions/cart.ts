@@ -34,7 +34,7 @@ export async function deleteCartItemAction(input: z.infer<typeof cartItemSchema>
 }
 
 export async function updateCartItemQuantityAction(input: z.infer<typeof cartItemSchema>) {
-    if (input.quantity === 0) return deleteCartItemAction(input);
+    if (input.quantity <= 0) return deleteCartItemAction(input);
 
     const supabase = createServerActionClient<Database>({ cookies });
 

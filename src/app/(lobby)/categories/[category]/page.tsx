@@ -4,7 +4,7 @@ import { toSentenceCase } from '@lib/utils';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import CategoriesPagination from './CategoriesPagination';
+import CategoriesPagination from '../../../../components/CategoriesPagination';
 
 interface CategoryPageProps {
     params: {

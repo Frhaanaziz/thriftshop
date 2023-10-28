@@ -1,5 +1,5 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import NewProductForm from './NewProductForm';
+import NewProductForm from '../../../../../../components/forms/NewProductForm';
 
 const NewProductPage = ({ params: { storeId } }: { params: { storeId: string } }) => {
     return (

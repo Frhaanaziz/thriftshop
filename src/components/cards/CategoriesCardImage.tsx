@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { AspectRatio } from './ui/aspect-ratio';
+import { AspectRatio } from '../ui/aspect-ratio';
 
 const CategoriesCardImage = ({ image }: { image: string }) => {
     return (

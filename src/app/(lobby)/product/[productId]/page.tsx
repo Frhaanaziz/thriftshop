@@ -9,7 +9,7 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { AddToCartForm } from './AddToCartForm';
+import { AddToCartForm } from '../../../../components/forms/AddToCartForm';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import FeaturedProduct from '@components/FeaturedProduct';

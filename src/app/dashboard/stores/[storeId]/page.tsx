@@ -1,4 +1,4 @@
-import UpdateStoreCard from './UpdateStoreCard';
+import UpdateStoreCard from '../../../../components/UpdateStoreCard';
 import { notFound } from 'next/navigation';
 import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';

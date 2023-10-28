@@ -1,4 +1,4 @@
-import CategoriesCard from '@components/CategoriesCard';
+import CategoriesCard from '@components/cards/CategoriesCard';
 import FeaturedProduct from '@components/FeaturedProduct';
 import FeaturedStore from '@components/layouts/FeaturedStore';
 import { Button, buttonVariants } from '@components/ui/button';

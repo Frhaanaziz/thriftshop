@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import DateRangePicker from './DateRangePicker';
+import DateRangePicker from '../../../../../components/DateRangePicker';
 import { Products } from '@types';
-import { DataTable } from './DataTable';
-import { columns } from './Columns';
+import { DataTable } from '../../../../../components/data-table/DataTable';
+import { columns } from '../../../../../components/data-table/Columns';
 
 type ProductsManageMainPageProps = {
     products: Products['Row'][];

@@ -52,7 +52,7 @@ const CartCounter = ({ productId, quantity }: { productId: string; quantity: num
                     size="icon"
                     className="h-8 w-8 rounded-r-none"
                     onClick={() => onSubmit({ quantity: quantity - 1 })}
-                    disabled={isLoading}
+                    disabled={isLoading || quantity <= 1}
                 >
                     <MinusIcon
                         className="h-3 w-3"
