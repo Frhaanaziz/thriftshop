@@ -50,7 +50,7 @@ async function uploadDummyData({ supabase, author_id, numStores = 50 }: UploadDu
         });
     }
 
-    const { data, error } = await supabase.from('stores').insert(stores).select();
+    const { data, error } = await supabase.from('stores').insert(stores).select('id');
     if (error) throw error;
 
     const products: Products['Insert'][] = [];
@@ -74,7 +74,7 @@ async function uploadDummyData({ supabase, author_id, numStores = 50 }: UploadDu
         });
     }
 
-    const uploadProducts = await supabase.from('products').insert(products).select();
+    const uploadProducts = await supabase.from('products').insert(products);
     if (uploadProducts.error) throw uploadProducts.error;
 }
 

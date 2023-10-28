@@ -13,7 +13,7 @@ const CartHeader = async () => {
     const supabase = createServerComponentClient<Database>({ cookies });
 
     const cartId = cookieStore.get('cartId')?.value as string;
-    const { data } = await supabase.from('carts').select().eq('id', cartId).maybeSingle();
+    const { data } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();
     const cart = data as Cart | null;
 
     const totalProductItems = cart?.items?.reduce((acc, item) => acc + item.quantity, 0);

@@ -12,7 +12,13 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { Database } from '@db/database.types';
 
-const CartHeaderContent = async ({ cart }: { cart: Cart | null }) => {
+interface CartHeaderContentProps {
+    cart: {
+        items: Cart['items'];
+    } | null;
+}
+
+const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
     if (!cart)
         return (
             <>

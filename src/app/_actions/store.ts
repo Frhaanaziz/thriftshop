@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 
 export async function getUserStoresAction({ input }: getUserStoresProps) {
     const supabase = createServerActionClient<Database>({ cookies });
-    const result = await supabase.from('stores').select().match(input);
+    const result = await supabase.from('stores').select('*').match(input);
     if (result.error) throw result.error;
 
     return result;

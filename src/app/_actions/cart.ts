@@ -15,7 +15,7 @@ export async function deleteCartItemAction(input: z.infer<typeof cartItemSchema>
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
 
-    const { data } = await supabase.from('carts').select().eq('id', cartId).maybeSingle();
+    const { data } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();
     const cart = data as Cart | undefined;
     if (!cart) throw new Error('Cart not found, please try again.');
 
@@ -41,7 +41,7 @@ export async function updateCartItemQuantityAction(input: z.infer<typeof cartIte
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
 
-    const { data: cart } = await supabase.from('carts').select().eq('id', cartId).maybeSingle();
+    const { data: cart } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();
     if (!cart) throw new Error('Cart not found, please try again.');
 
     const cartItem = cart.items?.find((item: any) => item?.productId == input.productId) as
@@ -98,7 +98,7 @@ export async function addToCartAction(input: z.infer<typeof cartItemSchema>) {
         return;
     }
 
-    const { data: cart } = await supabase.from('carts').select().eq('id', cartId).maybeSingle();
+    const { data: cart } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();
 
     if (!cart) {
         cookies().set({

@@ -1,11 +1,14 @@
 import Image from 'next/image';
 import { AspectRatio } from '../ui/aspect-ratio';
 import { Stores } from '@types';
-import EmptyImage from '@components/EmptyImage';
 import Link from 'next/link';
 
 type FeaturedStoreProps = {
-    store: Stores['Row'];
+    store: {
+        id: Stores['Row']['id'];
+        name: Stores['Row']['name'];
+        description: Stores['Row']['description'];
+    };
     index: number;
 };
 

@@ -17,7 +17,7 @@ export async function getUserAction() {
 
 export async function getProfileAction({ user_id }: GetProfileProps) {
     const supabase = createServerActionClient<Database>({ cookies });
-    const result = await supabase.from('profiles').select().eq('user_id', user_id).maybeSingle();
+    const result = await supabase.from('profiles').select('*').eq('user_id', user_id).maybeSingle();
     if (result.error) throw result.error;
 
     return result;

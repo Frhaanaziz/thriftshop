@@ -14,7 +14,6 @@ import { AddToCartForm } from './AddToCartForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import FeaturedProduct from '@components/FeaturedProduct';
 import { AspectRatio } from '@components/ui/aspect-ratio';
-import { Products } from '@types';
 
 const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
     const supabase = createServerComponentClient<Database>({ cookies });
@@ -27,7 +26,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
 
     const { data: otherProducts } = await supabase
         .from('products')
-        .select()
+        .select('id, name, price, product_images')
         .match({ store_id: product.store_id, author_id: product.author_id })
         .neq('id', product.id);
 
@@ -109,7 +108,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
                     <h2 className="text-2xl font-bold">More products from {store.name}</h2>
                     <div className="overflow-x-auto pb-2 pt-6">
                         <div className="flex w-fit gap-4">
-                            {otherProducts.map((product: Products['Row']) => (
+                            {otherProducts.map((product) => (
                                 <div
                                     key={product.id}
                                     className="border bg-card text-card-foreground shadow h-full overflow-hidden rounded-sm min-w-[260px] flex items-start"

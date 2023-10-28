@@ -9,7 +9,7 @@ import { cookies } from 'next/headers';
 
 export async function getProductAction({ input }: getProductProps) {
     const supabase = createServerActionClient<Database>({ cookies });
-    const result = await supabase.from('products').select().match(input).maybeSingle();
+    const result = await supabase.from('products').select('*').match(input).maybeSingle();
     if (result.error) throw result.error;
 
     return result;
@@ -17,7 +17,7 @@ export async function getProductAction({ input }: getProductProps) {
 
 export async function getProductsAction({ input }: getProductProps) {
     const supabase = createServerActionClient<Database>({ cookies });
-    const result = await supabase.from('products').select().match(input);
+    const result = await supabase.from('products').select('*').match(input);
     if (result.error) throw result.error;
 
     return result;

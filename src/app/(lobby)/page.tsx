@@ -14,8 +14,11 @@ import { Products, Stores } from '@types';
 export default async function Home() {
     const supabase = createServerComponentClient<Database>({ cookies });
 
-    const { data: products } = await supabase.from('products').select().limit(8);
-    const { data: stores } = await supabase.from('stores').select().limit(4);
+    const { data: products } = await supabase
+        .from('products')
+        .select('id, name, price, product_images')
+        .limit(8);
+    const { data: stores } = await supabase.from('stores').select('id, name, description').limit(4);
 
     return (
         <div className="container mb-14">
@@ -66,7 +69,7 @@ export default async function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:grid-cols-4">
-                    {products?.map((product: Products['Row']) => (
+                    {products?.map((product) => (
                         <FeaturedProduct
                             key={product.id}
                             product={product}
@@ -82,7 +85,7 @@ export default async function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 xl:grid-cols-4 ">
-                    {stores?.map((store: Stores['Row'], i: number) => (
+                    {stores?.map((store, i) => (
                         <FeaturedStore
                             key={store.id}
                             store={store}
