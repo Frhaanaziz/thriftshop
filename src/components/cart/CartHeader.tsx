@@ -9,10 +9,9 @@ import CartHeaderContent from './CartHeaderContent';
 import { Cart } from '@types';
 
 const CartHeader = async () => {
-    const cookieStore = cookies();
     const supabase = createServerComponentClient<Database>({ cookies });
 
-    const cartId = cookieStore.get('cartId')?.value as string;
+    const cartId = cookies().get('cartId')?.value as string;
     const { data } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();
     const cart = data as Cart | null;
 
@@ -24,6 +23,7 @@ const CartHeader = async () => {
                     variant="outline"
                     size="icon"
                     className="relative"
+                    aria-label="Open cart"
                 >
                     <ShoppingCart className="h-4 w-4" />
                     {cart && cart.items?.length > 0 && (

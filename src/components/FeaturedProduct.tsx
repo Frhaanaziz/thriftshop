@@ -28,10 +28,10 @@ const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
                 </AspectRatio>
 
                 <div className="p-4">
-                    <h3 className="text-xl font-semibold truncate">{product.name}</h3>
-                    <p className="mb-5 font-normal text-gray-700 dark:text-gray-400">
+                    <p className="text-xl font-semibold truncate">{product.name}</p>
+                    <span className="mb-5 font-normal text-gray-700 dark:text-gray-400">
                         {formatPrice(product.price)}
-                    </p>
+                    </span>
                 </div>
             </Link>
 

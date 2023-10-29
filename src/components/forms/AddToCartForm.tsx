@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { catchError } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { catchError, cn } from '@/lib/utils';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
@@ -53,21 +53,23 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                 onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
             >
                 <div className="flex items-center">
-                    <Button
-                        id={`${id}-decrement`}
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-r-none"
-                        onClick={() => form.setValue('quantity', Math.max(0, form.getValues('quantity') - 1))}
-                        disabled={isLoading}
+                    <span
+                        id={`${id}-increment`}
+                        className={buttonVariants({
+                            variant: 'outline',
+                            size: 'icon',
+                            className: `h-8 w-8 rounded-r-none cursor-pointer ${
+                                isLoading && 'pointer-events-none'
+                            }`,
+                        })}
+                        onClick={() => form.setValue('quantity', form.getValues('quantity') + 1)}
                     >
                         <MinusIcon
                             className="h-3 w-3"
                             aria-hidden="true"
                         />
                         <span className="sr-only">Remove one item</span>
-                    </Button>
+                    </span>
                     <FormField
                         control={form.control}
                         name="quantity"
@@ -93,21 +95,23 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                             </FormItem>
                         )}
                     />
-                    <Button
+                    <span
                         id={`${id}-increment`}
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-l-none"
+                        className={buttonVariants({
+                            variant: 'outline',
+                            size: 'icon',
+                            className: `h-8 w-8 rounded-l-none cursor-pointer ${
+                                isLoading && 'pointer-events-none'
+                            }`,
+                        })}
                         onClick={() => form.setValue('quantity', form.getValues('quantity') + 1)}
-                        disabled={isLoading}
                     >
                         <PlusIcon
                             className="h-3 w-3"
                             aria-hidden="true"
                         />
                         <span className="sr-only">Add one item</span>
-                    </Button>
+                    </span>
                 </div>
 
                 <Button

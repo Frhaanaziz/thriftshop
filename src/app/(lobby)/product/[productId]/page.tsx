@@ -28,7 +28,8 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
         .from('products')
         .select('id, name, price, product_images')
         .match({ store_id: product.store_id, author_id: product.author_id })
-        .neq('id', product.id);
+        .neq('id', product.id)
+        .limit(20);
 
     return (
         <>
@@ -61,7 +62,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
                         <AspectRatio ratio={1 / 1}>
                             <Image
                                 src={product.product_images.at(0)!}
-                                alt="random"
+                                alt={product.name}
                                 sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 90vw"
                                 priority
                                 fill

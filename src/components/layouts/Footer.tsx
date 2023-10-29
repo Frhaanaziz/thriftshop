@@ -16,22 +16,24 @@ const Footer = () => {
                     </Link>
                     <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4 lg:flex w-full justify-evenly">
                         {siteConfig.footerNav.map((component) => (
-                            <ul
+                            <div
                                 key={component.title}
-                                className=" text-muted-foreground flex flex-col gap-4"
+                                className="space-y-2"
                             >
                                 <span className="font-bold text-primary text-lg">{component.title}</span>
-                                {component.items.map((item) => (
-                                    <li key={item.title}>
-                                        <Link
-                                            href={item.href}
-                                            className="hover:text-primary transition"
-                                        >
-                                            {item.title}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+                                <ul className=" text-muted-foreground flex flex-col gap-4">
+                                    {component.items.map((item) => (
+                                        <li key={item.title}>
+                                            <Link
+                                                href={item.href}
+                                                className="hover:text-primary transition"
+                                            >
+                                                {item.title}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         ))}
                     </div>
 
@@ -53,6 +55,7 @@ const Footer = () => {
                                 type="submit"
                                 size="icon"
                                 className="h-10"
+                                aria-label="Submit Subscribe"
                             >
                                 <SendHorizonal className="h-5 w-5" />
                             </Button>

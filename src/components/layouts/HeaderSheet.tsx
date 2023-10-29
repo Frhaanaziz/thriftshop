@@ -7,7 +7,10 @@ import Link from 'next/link';
 const HeaderSheet = () => {
     return (
         <Sheet>
-            <SheetTrigger className="lg:hidden">
+            <SheetTrigger
+                aria-label="open navigation"
+                className="lg:hidden"
+            >
                 <Menu />
             </SheetTrigger>
             <SheetContent side="left">
