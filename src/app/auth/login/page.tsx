@@ -1,4 +1,3 @@
-'use client';
 import LogInForm from './LogInForm';
 
 export default function LoginForm() {

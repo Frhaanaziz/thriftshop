@@ -1,6 +1,6 @@
 'use server';
 
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { categories } from '@lib/constant';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { Products } from '@types';

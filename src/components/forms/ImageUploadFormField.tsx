@@ -3,7 +3,7 @@ import { Button } from '@components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form';
 import { Input } from '@components/ui/input';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Accessibility, Cloud, File } from 'lucide-react';
 import { useRouter } from 'next/navigation';

@@ -10,7 +10,7 @@ import { Button } from '@components/ui/button';
 import { ScrollArea } from '@components/ui/scroll-area';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 
 interface CartHeaderContentProps {
     cart: {

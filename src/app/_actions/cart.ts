@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 
 import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { cartItemSchema } from '@lib/validations/cart';
 import { Cart, CartItem } from '@types';
 

@@ -18,7 +18,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 
 type SelectStoreComboboxProps = {
     stores: Stores['Row'][];

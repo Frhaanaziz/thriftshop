@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Balancer from 'react-wrap-balancer';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { productCategories } from '@config/products';
 import { Products, Stores } from '@types';
 

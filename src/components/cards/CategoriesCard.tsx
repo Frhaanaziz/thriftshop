@@ -3,7 +3,7 @@ import { buttonVariants } from '../ui/button';
 import CategoriesCardImage from './CategoriesCardImage';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { categories } from '@lib/constant';
 import { productCategories } from '@config/products';
 import Icon from '../Icon';

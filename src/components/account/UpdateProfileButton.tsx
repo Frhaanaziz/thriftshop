@@ -23,7 +23,7 @@ import {
 import { deleteAvatarAction, updateProfileAction } from '@app/_actions/user';
 import { catchError } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 
 interface Profile {
     user_id: string;

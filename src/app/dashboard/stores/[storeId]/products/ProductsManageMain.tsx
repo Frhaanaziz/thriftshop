@@ -6,12 +6,11 @@ import { Products } from '@types';
 import { DataTable } from '../../../../../components/data-table/DataTable';
 import { columns } from '../../../../../components/data-table/Columns';
 
-type ProductsManageMainPageProps = {
+type Props = {
     products: Products['Row'][];
-    // products: Products['Row'][] | null;
 };
 
-const ProductsManageMainPage = ({ products: data }: ProductsManageMainPageProps) => {
+const ProductsManageMain = ({ products: data }: Props) => {
     const [date, setDate] = useState<DateRange | undefined>({
         from: undefined,
         to: undefined,
@@ -37,4 +36,4 @@ const ProductsManageMainPage = ({ products: data }: ProductsManageMainPageProps)
     );
 };
 
-export default ProductsManageMainPage;
+export default ProductsManageMain;

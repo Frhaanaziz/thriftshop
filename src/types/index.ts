@@ -1,4 +1,4 @@
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { cartItemSchema } from '@lib/validations/cart';
 import z from 'zod';
 

@@ -1,7 +1,7 @@
 import { getProductAction } from '@app/_actions/product';
 import EmptyImage from '@components/EmptyImage';
 import { Separator } from '@components/ui/separator';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { formatPrice } from '@lib/utils';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { ChevronRight } from 'lucide-react';

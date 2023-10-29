@@ -1,5 +1,4 @@
 'use client';
-import { Database } from '@db/database.types';
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import { faker } from '@faker-js/faker';
 import { Button } from '@components/ui/button';
@@ -9,9 +8,9 @@ import { categories, sub_category } from '@lib/constant';
 import { Products } from '@types';
 import { useState } from 'react';
 
-const supabase = createClientComponentClient<Database>();
+const supabase = createClientComponentClient();
 
-const UploadDummyDataButton = ({ user }: { user: User }) => {
+const UploadDummyDataButton = ({ author_id }: { author_id: User['id'] }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return (
@@ -21,7 +20,7 @@ const UploadDummyDataButton = ({ user }: { user: User }) => {
                     setIsLoading(true);
                     await uploadDummyData({
                         supabase,
-                        author_id: user.id!,
+                        author_id,
                     });
                     toast.success('Dummy data uploaded successfully');
                 } catch (error: any) {
@@ -79,7 +78,7 @@ async function uploadDummyData({ supabase, author_id, numStores = 50 }: UploadDu
 }
 
 type UploadDummyDataProps = {
-    supabase: SupabaseClient<Database>;
+    supabase: SupabaseClient;
     author_id: User['id'];
     numStores?: number;
 };

@@ -1,4 +1,4 @@
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { type ClassValue, clsx } from 'clsx';
 

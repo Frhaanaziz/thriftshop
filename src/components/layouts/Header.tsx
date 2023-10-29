@@ -5,26 +5,22 @@ import SearchHeader from '../SearchHeader';
 import CartHeader from '../cart/CartHeader';
 import Link from 'next/link';
 
-import { getSession } from '@lib/getSession';
 import DropdownHeader from './DropdownHeader';
 import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
+import { getUserAction } from '@app/_actions/user';
 
 const Header = async () => {
-    const {
-        data: { session },
-    } = await getSession();
+    const author_id = (await getUserAction()).data.user.id;
     return (
         <header className="sticky border-b top-0 bg-background z-50">
             <div className="container flex h-16 justify-between items-center">
                 <HeaderSheet />
                 <Navbar />
-
-                <UploadDummyDataButton user={session?.user!} />
-
+                {author_id && <UploadDummyDataButton author_id={author_id} />}
                 <div className="flex gap-3">
                     <SearchHeader />
                     <CartHeader />
-                    {!session ? (
+                    {!author_id ? (
                         <Link
                             href="/auth/login"
                             className={buttonVariants({

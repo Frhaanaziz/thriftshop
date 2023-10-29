@@ -1,5 +1,5 @@
 import FeaturedProduct from '@components/FeaturedProduct';
-import { Database } from '@db/database.types';
+import { Database } from '@types/database.types';
 import { toSentenceCase } from '@lib/utils';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
