@@ -9,8 +9,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
 import { getSession } from '@lib/getSession';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -19,7 +17,6 @@ import { addStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 
 const NewStorePage = () => {
-    const supabase = createClientComponentClient<Database>();
     const router = useRouter();
 
     const form = useForm<z.infer<typeof newStoreSchema>>({
@@ -36,7 +33,7 @@ const NewStorePage = () => {
         try {
             const {
                 data: { session },
-            } = await getSession({ supabase });
+            } = await getSession();
             if (!session) throw new Error('Session not found');
 
             const author_id = session.user.id;

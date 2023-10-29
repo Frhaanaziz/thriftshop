@@ -5,19 +5,14 @@ import SearchHeader from '../SearchHeader';
 import CartHeader from '../cart/CartHeader';
 import Link from 'next/link';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@db/database.types';
-import { cookies } from 'next/headers';
 import { getSession } from '@lib/getSession';
 import DropdownHeader from './DropdownHeader';
 import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
 
 const Header = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
-
     const {
         data: { session },
-    } = await getSession({ supabase });
+    } = await getSession();
     return (
         <header className="sticky border-b top-0 bg-background z-50">
             <div className="container flex h-16 justify-between items-center">
