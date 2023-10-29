@@ -1,6 +1,7 @@
 'use server';
 
 import { Database } from '@db/database.types';
+import { categories } from '@lib/constant';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { Products } from '@types';
 import { revalidatePath } from 'next/cache';
@@ -47,6 +48,26 @@ export async function updateProductAction({ input }: UpdateProductProps) {
     if (result.error) throw result.error;
 
     return result;
+}
+
+export async function filterProductsAction(query: string) {
+    if (query.length === 0) return null;
+    const supabase = createServerActionClient<Database>({ cookies });
+
+    const { data: filteredProducts, error } = await supabase
+        .from('products')
+        .select('id, name, category')
+        .ilike('name', `%${query}%`)
+        .order('created_at', { ascending: false })
+        .limit(10);
+    if (error) throw error;
+
+    const productsByCategory = Object.values(categories).map((category) => ({
+        category,
+        products: filteredProducts.filter((product) => product.category === category),
+    }));
+
+    return productsByCategory;
 }
 
 type UpdateProductProps = {

@@ -7,12 +7,7 @@ import EmptyImage from './EmptyImage';
 import AddToCartButton from './cart/AddToCartButton';
 
 type FeaturedProductProps = {
-    product: {
-        id: Products['Row']['id'];
-        name: Products['Row']['name'];
-        price: Products['Row']['price'];
-        product_images: Products['Row']['product_images'];
-    };
+    product: Pick<Products['Row'], 'id' | 'name' | 'price' | 'product_images'>;
 };
 
 const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
