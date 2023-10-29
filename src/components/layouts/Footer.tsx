@@ -2,9 +2,10 @@ import Link from 'next/link';
 import Logo from '../Logo';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Button } from '../ui/button';
-import { Github, Moon, SendHorizonal } from 'lucide-react';
+import { Button, buttonVariants } from '../ui/button';
+import { Github, SendHorizonal } from 'lucide-react';
 import { siteConfig } from '@config/site';
+import Theme from '@components/Theme';
 
 const Footer = () => {
     return (
@@ -20,7 +21,7 @@ const Footer = () => {
                                 key={component.title}
                                 className="space-y-2"
                             >
-                                <span className="font-bold text-primary text-lg">{component.title}</span>
+                                <span className="font-bold text-lg">{component.title}</span>
                                 <ul className=" text-muted-foreground flex flex-col gap-4">
                                     {component.items.map((item) => (
                                         <li key={item.title}>
@@ -40,7 +41,7 @@ const Footer = () => {
                     <div className="min-w-fit">
                         <Label
                             htmlFor="newsletter"
-                            className="font-semibold text-primary text-lg"
+                            className="font-semibold text-lg"
                         >
                             Subscribe to our newsletter
                         </Label>
@@ -68,8 +69,17 @@ const Footer = () => {
                         Build by <span className="font-semibold">Farhan</span>.
                     </p>
                     <div className="flex gap-5">
-                        <Github />
-                        <Moon />
+                        <Link
+                            className={buttonVariants({
+                                size: 'icon',
+                            })}
+                            href="https://github.com/Frhaanaziz/thriftshop"
+                            target="_blank"
+                        >
+                            <Github className="w-5 h-5" />
+                        </Link>
+
+                        <Theme />
                     </div>
                 </div>
             </div>

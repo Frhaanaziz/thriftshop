@@ -1,18 +1,15 @@
 import { getProductAction } from '@app/_actions/product';
 import EmptyImage from '@components/EmptyImage';
 import { Separator } from '@components/ui/separator';
-import { Database } from '@database/database.types';
 import { formatPrice } from '@lib/utils';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { ChevronRight } from 'lucide-react';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AddToCartForm } from '../../../../components/forms/AddToCartForm';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import FeaturedProduct from '@components/FeaturedProduct';
+import ProductCard from '@components/cards/ProductCard';
 import { AspectRatio } from '@components/ui/aspect-ratio';
 import { supabaseServerComponentClient } from '@database/supabase';
 
@@ -115,7 +112,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
                                     key={product.id}
                                     className="border bg-card text-card-foreground shadow h-full overflow-hidden rounded-sm min-w-[260px] flex items-start"
                                 >
-                                    <FeaturedProduct product={product} />
+                                    <ProductCard product={product} />
                                 </div>
                             ))}
                         </div>

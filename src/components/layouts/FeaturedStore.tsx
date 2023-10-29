@@ -16,7 +16,7 @@ const FeaturedStore = ({ store, index }: FeaturedStoreProps) => {
     return (
         <Link
             href={`/products?store_ids=${store.id}`}
-            className="border rounded-xl overflow-hidden"
+            className="border rounded-xl overflow-hidden bg-card"
         >
             <AspectRatio ratio={21 / 9}>
                 <Image

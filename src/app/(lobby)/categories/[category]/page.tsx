@@ -1,4 +1,4 @@
-import FeaturedProduct from '@components/FeaturedProduct';
+import ProductCard from '@components/cards/ProductCard';
 import { toSentenceCase } from '@lib/utils';
 import { notFound } from 'next/navigation';
 import CategoriesPagination from '../../../../components/CategoriesPagination';
@@ -40,7 +40,7 @@ const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
             <section>
                 <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-7">
                     {products.map((product) => (
-                        <FeaturedProduct
+                        <ProductCard
                             key={product.id}
                             product={product}
                         />

@@ -1,4 +1,4 @@
-import SignOutForm from './SignOutForm';
+import SignOutForm from '../../../components/forms/SignOutForm';
 
 const SignoutPage = () => {
     return (

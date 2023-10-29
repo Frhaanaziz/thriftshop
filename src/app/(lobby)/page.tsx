@@ -1,5 +1,4 @@
 import CategoriesCard from '@components/cards/CategoriesCard';
-import FeaturedProduct from '@components/FeaturedProduct';
 import FeaturedStore from '@components/layouts/FeaturedStore';
 import { Button, buttonVariants } from '@components/ui/button';
 import { siteConfig } from '@config/site';
@@ -7,6 +6,7 @@ import Link from 'next/link';
 import Balancer from 'react-wrap-balancer';
 import { productCategories } from '@config/products';
 import { supabaseServerComponentClient } from '@database/supabase';
+import ProductCard from '@components/cards/ProductCard';
 
 export default async function Home() {
     const supabase = supabaseServerComponentClient();
@@ -67,7 +67,7 @@ export default async function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:grid-cols-4">
                     {products?.map((product) => (
-                        <FeaturedProduct
+                        <ProductCard
                             key={product.id}
                             product={product}
                         />

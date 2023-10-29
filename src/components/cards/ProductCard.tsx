@@ -1,18 +1,18 @@
 import Image from 'next/image';
-import { AspectRatio } from './ui/aspect-ratio';
+import { AspectRatio } from '../ui/aspect-ratio';
 import { Products } from '@types';
 import { formatPrice } from '@lib/utils';
 import Link from 'next/link';
-import EmptyImage from './EmptyImage';
-import AddToCartButton from './cart/AddToCartButton';
+import EmptyImage from '../EmptyImage';
+import AddToCartButton from '../cart/AddToCartButton';
 
-type FeaturedProductProps = {
+type ProductCardProps = {
     product: Pick<Products['Row'], 'id' | 'name' | 'price' | 'product_images'>;
 };
 
-const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
+const ProductCard = async ({ product }: ProductCardProps) => {
     return (
-        <div className="border rounded overflow-hidden w-full h-full">
+        <div className="border rounded overflow-hidden w-full h-full bg-card">
             <Link href={`/product/${product.id}`}>
                 <AspectRatio ratio={3 / 2}>
                     {product.product_images ? (
@@ -42,4 +42,4 @@ const FeaturedProduct = async ({ product }: FeaturedProductProps) => {
     );
 };
 
-export default FeaturedProduct;
+export default ProductCard;
