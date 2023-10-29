@@ -1,14 +1,11 @@
 'use server';
 
-import { Database } from '@types/database.types';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
+import { supabaseServerActionClient } from '@database/supabase';
 import { Profiles } from '@types';
 import { revalidatePath } from 'next/cache';
 
-import { cookies } from 'next/headers';
-
 export async function getUserAction() {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.auth.getUser();
     if (result.error) throw result.error;
 
@@ -16,7 +13,7 @@ export async function getUserAction() {
 }
 
 export async function getProfileAction({ user_id }: GetProfileProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('profiles').select('*').eq('user_id', user_id).maybeSingle();
     if (result.error) throw result.error;
 
@@ -24,7 +21,7 @@ export async function getProfileAction({ user_id }: GetProfileProps) {
 }
 
 export async function updateProfileAction({ profile, filePath }: UpdateProfileProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('profiles').upsert({
         ...profile,
         avatar_url: filePath
@@ -38,7 +35,7 @@ export async function updateProfileAction({ profile, filePath }: UpdateProfilePr
 }
 
 export async function deleteAvatarAction({ profile }: DeleteAvatarProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const fileName = profile.avatar_url?.split('/avatars/')[1];
     if (!fileName) throw new Error('You dont have any avatar yet');
 
@@ -56,7 +53,7 @@ export async function deleteAvatarAction({ profile }: DeleteAvatarProps) {
 }
 
 export async function signUpUserAction({ input, fullName }: SignUpUserProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.auth.signUp({
         ...input,
         options: {
@@ -69,7 +66,7 @@ export async function signUpUserAction({ input, fullName }: SignUpUserProps) {
 }
 
 export async function signInUserAction({ input }: SignInUserProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.auth.signInWithPassword({
         ...input,
     });
@@ -80,7 +77,7 @@ export async function signInUserAction({ input }: SignInUserProps) {
 }
 
 export async function updateUserProfileAction({ input, user_id }: UpdateUserProfileProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase
         .from('profiles')
         .update({
@@ -93,7 +90,7 @@ export async function updateUserProfileAction({ input, user_id }: UpdateUserProf
 }
 
 export async function addUserProfileAction({ input, user_id }: AddUserProfileType) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase
         .from('profiles')
         .insert({

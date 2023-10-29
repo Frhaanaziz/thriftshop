@@ -1,15 +1,12 @@
 'use server';
 
-import { Database } from '@types/database.types';
+import { supabaseServerActionClient } from '@database/supabase';
 import { categories } from '@lib/constant';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { Products } from '@types';
 import { revalidatePath } from 'next/cache';
 
-import { cookies } from 'next/headers';
-
 export async function getProductAction({ input }: getProductProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').select('*').match(input).maybeSingle();
     if (result.error) throw result.error;
 
@@ -17,7 +14,7 @@ export async function getProductAction({ input }: getProductProps) {
 }
 
 export async function getProductsAction({ input }: getProductProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').select('*').match(input);
     if (result.error) throw result.error;
 
@@ -25,7 +22,7 @@ export async function getProductsAction({ input }: getProductProps) {
 }
 
 export async function uploadProductAction({ input }: UploadProductProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').insert(input);
     if (result.error) throw result.error;
 
@@ -34,7 +31,7 @@ export async function uploadProductAction({ input }: UploadProductProps) {
 }
 
 export async function deleteProductAction({ input, path }: DeleteProductProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').delete().match(input);
     if (result.error) throw result.error;
 
@@ -43,7 +40,7 @@ export async function deleteProductAction({ input, path }: DeleteProductProps) {
 }
 
 export async function updateProductAction({ input }: UpdateProductProps) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').upsert(input);
     if (result.error) throw result.error;
 
@@ -52,7 +49,7 @@ export async function updateProductAction({ input }: UpdateProductProps) {
 
 export async function filterProductsAction(query: string) {
     if (query.length === 0) return null;
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
 
     const { data: filteredProducts, error } = await supabase
         .from('products')

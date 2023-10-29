@@ -1,15 +1,14 @@
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Database } from '@types/database.types';
 import CartHeaderContent from './CartHeaderContent';
 import { Cart } from '@types';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 const CartHeader = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
 
     const cartId = cookies().get('cartId')?.value as string;
     const { data } = await supabase.from('carts').select('items').eq('id', cartId).maybeSingle();

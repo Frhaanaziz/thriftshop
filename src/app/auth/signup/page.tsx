@@ -1,6 +1,7 @@
+import SignupForm from '@components/forms/SignupForm';
 import { Link } from 'lucide-react';
 
-export default function SignupForm() {
+export default function SignupPage() {
     return (
         <>
             <div className="flex flex-col space-y-2 text-center">

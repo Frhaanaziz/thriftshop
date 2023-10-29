@@ -20,7 +20,10 @@ const Header = async () => {
                 <div className="flex gap-3">
                     <SearchHeader />
                     <CartHeader />
-                    {!author_id ? (
+
+                    {author_id && <DropdownHeader user_id={author_id} />}
+
+                    {!author_id && (
                         <Link
                             href="/auth/login"
                             className={buttonVariants({
@@ -29,8 +32,6 @@ const Header = async () => {
                         >
                             Sign In
                         </Link>
-                    ) : (
-                        <DropdownHeader />
                     )}
                 </div>
             </div>

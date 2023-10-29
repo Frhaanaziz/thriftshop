@@ -11,13 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Link from 'next/link';
-import { getProfileAction, getUserAction } from '@app/_actions/user';
+import { getProfileAction } from '@app/_actions/user';
+import { User as UserType } from '@supabase/supabase-js';
 
-const DropdownHeader = async () => {
-    const {
-        data: { user },
-    } = await getUserAction();
-    const { data: profile } = await getProfileAction({ user_id: user.id });
+const DropdownHeader = async ({ user_id }: { user_id: UserType['id'] }) => {
+    const { data: profile } = await getProfileAction({ user_id });
 
     return (
         <DropdownMenu>

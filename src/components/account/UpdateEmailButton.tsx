@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@components/ui/button';
-import { Database } from '@types/database.types';
+import { Database } from '@database/database.types';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Profiles } from '@types';
 import { FormEvent, useState } from 'react';

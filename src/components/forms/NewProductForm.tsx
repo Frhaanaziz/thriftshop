@@ -20,7 +20,7 @@ import { getUserAction } from '@app/_actions/user';
 import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@types/database.types';
+import { Database } from '@database/database.types';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;

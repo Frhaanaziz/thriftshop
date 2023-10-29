@@ -5,14 +5,11 @@ import { Button, buttonVariants } from '@components/ui/button';
 import { siteConfig } from '@config/site';
 import Link from 'next/link';
 import Balancer from 'react-wrap-balancer';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@types/database.types';
 import { productCategories } from '@config/products';
-import { Products, Stores } from '@types';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 export default async function Home() {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
 
     const { data: products } = await supabase
         .from('products')

@@ -1,16 +1,15 @@
 'use server';
 
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 
 import { cookies } from 'next/headers';
-import { Database } from '@types/database.types';
 import { cartItemSchema } from '@lib/validations/cart';
 import { Cart, CartItem } from '@types';
+import { supabaseServerActionClient } from '@database/supabase';
 
 export async function deleteCartItemAction(input: z.infer<typeof cartItemSchema>) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
 
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
@@ -36,7 +35,7 @@ export async function deleteCartItemAction(input: z.infer<typeof cartItemSchema>
 export async function updateCartItemQuantityAction(input: z.infer<typeof cartItemSchema>) {
     if (input.quantity <= 0) return deleteCartItemAction(input);
 
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
 
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
@@ -69,7 +68,7 @@ export async function updateCartItemQuantityAction(input: z.infer<typeof cartIte
 }
 
 export async function addToCartAction(input: z.infer<typeof cartItemSchema>) {
-    const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = supabaseServerActionClient();
 
     // Checking if product is in stock
     const { data: product } = await supabase

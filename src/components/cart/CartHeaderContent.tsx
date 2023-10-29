@@ -8,9 +8,7 @@ import CartCounter from './CartCounter';
 import Image from 'next/image';
 import { Button } from '@components/ui/button';
 import { ScrollArea } from '@components/ui/scroll-area';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@types/database.types';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 interface CartHeaderContentProps {
     cart: {
@@ -35,7 +33,7 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
                 </div>
             </>
         );
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
     const totalProductItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
     const productCart = await Promise.all(
         cart.items.map(async (item) => {

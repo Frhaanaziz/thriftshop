@@ -1,7 +1,7 @@
 import { getProductAction } from '@app/_actions/product';
 import EmptyImage from '@components/EmptyImage';
 import { Separator } from '@components/ui/separator';
-import { Database } from '@types/database.types';
+import { Database } from '@database/database.types';
 import { formatPrice } from '@lib/utils';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { ChevronRight } from 'lucide-react';
@@ -14,9 +14,10 @@ import { AddToCartForm } from '../../../../components/forms/AddToCartForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import FeaturedProduct from '@components/FeaturedProduct';
 import { AspectRatio } from '@components/ui/aspect-ratio';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
 
     const { data: product } = await getProductAction({ input: { id: productId } });
     if (!product) notFound();

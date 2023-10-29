@@ -1,10 +1,8 @@
 import FeaturedProduct from '@components/FeaturedProduct';
-import { Database } from '@types/database.types';
 import { toSentenceCase } from '@lib/utils';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import CategoriesPagination from '../../../../components/CategoriesPagination';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 interface CategoryPageProps {
     params: {
@@ -16,7 +14,7 @@ interface CategoryPageProps {
 }
 
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
 
     const { category } = params;
     const { page, per_page, sort, subcategories, price_range, store_ids, store_page } = searchParams;

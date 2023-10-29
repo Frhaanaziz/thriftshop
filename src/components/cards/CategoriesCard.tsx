@@ -1,16 +1,14 @@
 import { cn } from '@lib/utils';
 import { buttonVariants } from '../ui/button';
 import CategoriesCardImage from './CategoriesCardImage';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@types/database.types';
 import { categories } from '@lib/constant';
 import { productCategories } from '@config/products';
 import Icon from '../Icon';
 import Link from 'next/link';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 const CategoriesCard = async () => {
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = supabaseServerComponentClient();
 
     const counts = await Promise.all(
         categories.map((category) => {
