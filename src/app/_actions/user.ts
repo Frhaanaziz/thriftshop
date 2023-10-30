@@ -7,10 +7,10 @@ import { revalidatePath } from 'next/cache';
 
 export async function getUserAction() {
     const supabase = supabaseServerActionClient();
-    const result = await supabase.auth.getUser();
+    const result = await supabase.auth.getSession();
     if (result.error) throw result.error;
 
-    return result;
+    return result.data.session?.user;
 }
 
 export async function getProfileAction({ user_id }: { user_id: User['id'] }) {

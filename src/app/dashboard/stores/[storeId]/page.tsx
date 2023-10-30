@@ -8,7 +8,8 @@ type StoreManageProps = {
 };
 
 const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
-    const author_id = (await getUserAction()).data.user.id;
+    const author_id = (await getUserAction())?.id;
+    if (!author_id) notFound();
 
     const stores = (await getUserStoresAction({ input: { author_id } })).data;
 

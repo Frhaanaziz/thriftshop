@@ -11,11 +11,8 @@ type StoreManageProps = {
 };
 
 const StoreManageLayout = async ({ params: { storeId }, children }: StoreManageProps) => {
-    const {
-        data: { user },
-    } = await getUserAction();
-
-    const author_id = user.id;
+    const author_id = (await getUserAction())?.id;
+    if (!author_id) notFound();
 
     const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
     if (error) throw new Error('Stores not found');

@@ -9,11 +9,10 @@ import { Avatar, AvatarImage, AvatarFallback } from '@components/ui/avatar';
 import { getInitials } from '@lib/utils';
 
 const AccountPage = async () => {
-    const {
-        data: { user },
-    } = await getUserAction();
+    const user_id = (await getUserAction())?.id;
+    if (!user_id) notFound();
 
-    const { data: profile } = await getProfileAction({ user_id: user.id });
+    const { data: profile } = await getProfileAction({ user_id });
     if (!profile) notFound();
 
     return (

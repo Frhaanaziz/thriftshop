@@ -10,7 +10,7 @@ import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
 import { getUserAction } from '@app/_actions/user';
 
 const Header = async () => {
-    const author_id = (await getUserAction()).data.user.id;
+    const author_id = (await getUserAction())?.id;
     return (
         <header className="sticky border-b top-0 bg-background z-50">
             <div className="container flex h-16 justify-between items-center">

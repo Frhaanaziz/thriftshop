@@ -21,11 +21,11 @@ export default async function Home() {
     return (
         <div className="container mb-14">
             <div className="my-28 flex flex-col items-center">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center animate-fade-up bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text tracking-[-0.02em] text-transparent drop-shadow-sm py-2">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center animate-fade-up bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text tracking-[-0.02em] text-transparent drop-shadow-sm py-3">
                     {siteConfig.description}
                 </h1>
 
-                <p className="text-muted-foreground text-center text-lg lg:text-2xl mt-3 mb-5">
+                <p className="text-muted-foreground text-center text-lg lg:text-2xl mt-2 mb-5">
                     <Balancer>
                         Buy and sell product from independent brands and stores around the world with ease
                     </Balancer>
@@ -97,7 +97,7 @@ export default async function Home() {
                 {productCategories.at(0)?.subcategories.map((subcategory) => (
                     <Link
                         key={subcategory.title}
-                        href={subcategory.slug}
+                        href={`/categories/clothing/${subcategory.slug}`}
                         className="py-0.5 px-3 bg-muted rounded-md"
                     >
                         {subcategory.title}

@@ -15,12 +15,12 @@ import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
 import { newProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@lib/constant';
-import { getUserAction } from '@app/_actions/user';
 import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
 import { useId, useState } from 'react';
+import { Stores } from '@types';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -36,7 +36,13 @@ const subCategoryValue = (value: string): string[] | undefined => {
 
 const supabase = createClientComponentClient<Database>();
 
-const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
+const NewProductForm = ({
+    storeId: store_id,
+    author_id,
+}: {
+    storeId: Stores['Row']['id'];
+    author_id: User['id'];
+}) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const id = useId();
@@ -59,8 +65,6 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
         const { category, inventory, name, price, sub_category, description } = formData;
         let productImageUrl: string[] | null = null;
 
-        const user = (await getUserAction()).data.user;
-
         try {
             setIsLoading(true);
             toast.loading('Creating your product', { id });
@@ -82,7 +86,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
 
             await uploadProductAction({
                 input: {
-                    author_id: user.id,
+                    author_id,
                     store_id,
                     category,
                     inventory,

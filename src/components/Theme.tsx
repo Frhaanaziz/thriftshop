@@ -1,21 +1,28 @@
 'use client';
-import { useTheme } from '@/context/ThemeProvider';
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 import { Moon, Sun } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Theme = () => {
-    const { mode, setMode } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const { theme, setTheme } = useTheme();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return null;
+    }
 
     return (
         <Button
             size="icon"
-            onClick={() => {
-                setMode(mode === 'dark' ? 'light' : 'dark');
-                mode === 'dark' ? (localStorage.theme = 'light') : (localStorage.theme = 'dark');
-            }}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
-            {mode === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
         </Button>
     );
 };

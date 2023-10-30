@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 type StoreCardProps = {
-    store: Stores['Row'];
+    store: Pick<Stores['Row'], 'id' | 'name' | 'description'>;
 };
 
 const StoreCard = ({ store }: StoreCardProps) => {

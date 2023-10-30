@@ -20,13 +20,13 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
     if (!cart)
         return (
             <>
-                <SheetHeader className="mb-3">
+                <SheetHeader className="mb-3 px-6">
                     <SheetTitle className="text-xl">Cart</SheetTitle>
                 </SheetHeader>
 
                 <Separator />
 
-                <div className="flex flex-col justify-center items-center h-full text-muted-foreground gap-3">
+                <div className="flex flex-col justify-center items-center h-full text-muted-foreground gap-3  px-6">
                     <ShoppingCart className="w-14 h-14" />
                     <p className="font-semibold text-xl">Your cart is empty</p>
                     <p className="font-medium text-sm">Add items to your cart to checkout</p>

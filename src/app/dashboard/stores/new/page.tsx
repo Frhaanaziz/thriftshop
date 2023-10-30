@@ -3,7 +3,7 @@ import NewStoreForm from '@components/forms/NewStoreForm';
 import { notFound } from 'next/navigation';
 
 const NewStorePage = async () => {
-    const author_id = (await getUserAction()).data.user.id;
+    const author_id = (await getUserAction())?.id;
     if (!author_id) return notFound();
 
     return (

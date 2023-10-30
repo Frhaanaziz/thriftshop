@@ -1,6 +1,6 @@
 import Products from '@components/Products';
 import { supabaseServerComponentClient } from '@database/supabase';
-import { toTitleCase, toTitleCaseWithStrip } from '@lib/utils';
+import { toTitleCase } from '@lib/utils';
 
 interface SubcategoryPageProps {
     params: {

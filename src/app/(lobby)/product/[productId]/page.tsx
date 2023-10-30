@@ -6,29 +6,29 @@ import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { AddToCartForm } from '../../../../components/forms/AddToCartForm';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import ProductCard from '@components/cards/ProductCard';
 import { AspectRatio } from '@components/ui/aspect-ratio';
 import { supabaseServerComponentClient } from '@database/supabase';
+import { AddToCartForm } from '@components/forms/AddToCartForm';
 
 const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
     if (!isValidUUID(productId)) notFound();
 
     const supabase = supabaseServerComponentClient();
 
-    const { data: product, error } = await getProductAction({ input: { id: productId } });
+    const { data: product } = await getProductAction({ input: { id: productId } });
     if (!product) notFound();
 
-    const { data: store, statusText: S } = await supabase
+    const { data: store } = await supabase
         .from('stores')
         .select('name')
         .eq('id', product.store_id!)
         .maybeSingle();
     if (!store) notFound();
 
-    const { data: otherProducts, statusText: OP } = await supabase
+    const { data: otherProducts } = await supabase
         .from('products')
         .select('id, name, price, product_images')
         .match({ store_id: product.store_id, author_id: product.author_id })
@@ -97,6 +97,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
 
                     <Accordion
                         type="single"
+                        defaultValue="description"
                         collapsible
                         className="w-full"
                     >

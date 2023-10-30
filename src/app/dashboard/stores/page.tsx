@@ -2,16 +2,20 @@ import { buttonVariants } from '@components/ui/button';
 import { Rocket } from 'lucide-react';
 import Link from 'next/link';
 import StoreCard from '../../../components/cards/StoreCard';
-import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';
+import { notFound } from 'next/navigation';
+import { supabaseServerComponentClient } from '@database/supabase';
 
 const StoresPage = async () => {
-    const {
-        data: { user },
-    } = await getUserAction();
-    const { data: stores } = await getUserStoresAction({
-        input: { author_id: user.id },
-    });
+    const author_id = (await getUserAction())?.id;
+    if (!author_id) notFound();
+
+    const supabase = supabaseServerComponentClient();
+
+    const { data: stores } = await supabase
+        .from('stores')
+        .select('id, name ,description')
+        .eq('author_id', author_id);
 
     return (
         <>
@@ -39,7 +43,7 @@ const StoresPage = async () => {
             </div>
 
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {stores.map((store, index) => (
+                {stores?.map((store, index) => (
                     <StoreCard
                         key={index}
                         store={store}

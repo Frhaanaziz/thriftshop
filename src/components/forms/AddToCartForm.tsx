@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
-import { useId, useState } from 'react';
+import { useId, useState, useTransition } from 'react';
 import { updateCartItemSchema } from '@lib/validations/cart';
 
 interface AddToCartFormProps {
@@ -21,6 +21,8 @@ interface AddToCartFormProps {
 type Inputs = z.infer<typeof updateCartItemSchema>;
 
 export function AddToCartForm({ productId }: AddToCartFormProps) {
+    const [isPending, startTransition] = useTransition();
+
     const id = useId();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const form = useForm<Inputs>({
@@ -35,10 +37,11 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
             setIsLoading(true);
             toast.loading('Adding to cart...', { id });
 
-            await addToCartAction({
+            const result = await addToCartAction({
                 productId,
                 quantity: data.quantity,
             });
+            if (result?.errorMessage) throw new Error(result.errorMessage);
 
             toast.success('Added to cart.', { id });
         } catch (err) {
@@ -64,7 +67,7 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                                 isLoading && 'pointer-events-none'
                             }`,
                         })}
-                        onClick={() => form.setValue('quantity', form.getValues('quantity') + 1)}
+                        onClick={() => form.setValue('quantity', form.getValues('quantity') - 1)}
                     >
                         <MinusIcon
                             className="h-3 w-3"

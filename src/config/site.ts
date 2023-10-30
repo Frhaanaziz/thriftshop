@@ -129,22 +129,26 @@ export const siteConfig = {
             items: [
                 {
                     title: 'About',
-                    href: '/about',
+                    href: '/',
+                    // href: '/about',
                     external: false,
                 },
                 {
                     title: 'Contact',
-                    href: '/contact',
+                    href: '/',
+                    // href: '/contact',
                     external: false,
                 },
                 {
                     title: 'Terms',
-                    href: '/terms',
+                    href: '/',
+                    // href: '/terms',
                     external: false,
                 },
                 {
                     title: 'Privacy',
-                    href: '/privacy',
+                    href: '/',
+                    // href: '/privacy',
                     external: false,
                 },
             ],
