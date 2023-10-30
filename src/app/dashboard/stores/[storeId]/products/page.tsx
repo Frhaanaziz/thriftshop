@@ -7,9 +7,7 @@ type ProductsManagePageProps = {
 };
 
 const ProductsManagePage = async ({ params: { storeId } }: ProductsManagePageProps) => {
-    const {
-        data: { user },
-    } = await getUserAction();
+    const user = (await getUserAction()).data.user;
 
     const { data: products } = await getProductsAction({
         input: { store_id: storeId, author_id: user.id },

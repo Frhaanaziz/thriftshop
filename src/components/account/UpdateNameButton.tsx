@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@components/ui/button';
 import { Profiles } from '@types';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useId, useState } from 'react';
 
 import {
     Dialog,
@@ -27,6 +27,7 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
     const [changedName, setChangedName] = useState<string>(profile?.fullName);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const id = useId();
 
     async function handleUpdateProfileName(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -35,13 +36,15 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
         try {
             setIsUpdating(true);
 
+            toast.loading('Updating profile name...', { id });
+
             await updateProfileAction({
                 profile: { ...profile, fullName: changedName },
             });
 
-            toast.success('Update profile name successfully');
+            toast.success('Update profile name successfully', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
         } finally {
             setIsUpdating(false);
         }

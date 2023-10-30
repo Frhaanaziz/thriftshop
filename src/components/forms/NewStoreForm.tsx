@@ -10,14 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import { newStoreSchema } from '@lib/validations/store';
 import { addStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 import { User } from '@supabase/supabase-js';
+import { useId } from 'react';
 
 const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
-    const router = useRouter();
+    const id = useId();
 
     const form = useForm<z.infer<typeof newStoreSchema>>({
         resolver: zodResolver(newStoreSchema),
@@ -29,14 +29,15 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
     const { handleSubmit, control, reset } = form;
 
     async function onSubmit({ name, description }: z.infer<typeof newStoreSchema>) {
-        reset();
         try {
+            toast.loading('Creating your store...', { id });
+
             await addStoreAction({ input: { author_id, name, description } });
 
-            router.push('/dashboard/stores');
-            toast.success('Successfully create your store');
+            reset();
+            toast.success('Successfully create your store', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
         }
     }
 

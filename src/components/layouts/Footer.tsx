@@ -16,15 +16,15 @@ const Footer = () => {
                         <Logo />
                     </Link>
                     <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4 lg:flex w-full justify-evenly">
-                        {siteConfig.footerNav.map((component) => (
+                        {siteConfig.footerNav.map((component, i) => (
                             <div
-                                key={component.title}
+                                key={i}
                                 className="space-y-2"
                             >
                                 <span className="font-bold text-lg">{component.title}</span>
                                 <ul className=" text-muted-foreground flex flex-col gap-4">
-                                    {component.items.map((item) => (
-                                        <li key={item.title}>
+                                    {component.items.map((item, i) => (
+                                        <li key={i}>
                                             <Link
                                                 href={item.href}
                                                 className="hover:text-primary transition"
@@ -45,7 +45,7 @@ const Footer = () => {
                         >
                             Subscribe to our newsletter
                         </Label>
-                        <div className="flex my-3 items-center gap-2">
+                        <div className="relative my-3">
                             <Input
                                 type="email"
                                 id="newsletter"
@@ -55,10 +55,10 @@ const Footer = () => {
                             <Button
                                 type="submit"
                                 size="icon"
-                                className="h-10"
+                                className="absolute top-1 right-1 z-10 h-8 w-8"
                                 aria-label="Submit Subscribe"
                             >
-                                <SendHorizonal className="h-5 w-5" />
+                                <SendHorizonal className="h-4 w-4" />
                             </Button>
                         </div>
                     </div>

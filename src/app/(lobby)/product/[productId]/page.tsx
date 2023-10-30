@@ -1,7 +1,7 @@
 import { getProductAction } from '@app/_actions/product';
 import EmptyImage from '@components/EmptyImage';
 import { Separator } from '@components/ui/separator';
-import { formatPrice } from '@lib/utils';
+import { formatPrice, isValidUUID } from '@lib/utils';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,15 +14,21 @@ import { AspectRatio } from '@components/ui/aspect-ratio';
 import { supabaseServerComponentClient } from '@database/supabase';
 
 const ProductPage = async ({ params: { productId } }: { params: { productId: string } }) => {
+    if (!isValidUUID(productId)) notFound();
+
     const supabase = supabaseServerComponentClient();
 
-    const { data: product } = await getProductAction({ input: { id: productId } });
+    const { data: product, error } = await getProductAction({ input: { id: productId } });
     if (!product) notFound();
 
-    const { data: store } = await supabase.from('stores').select('name').eq('id', product.store_id!).single();
+    const { data: store, statusText: S } = await supabase
+        .from('stores')
+        .select('name')
+        .eq('id', product.store_id!)
+        .maybeSingle();
     if (!store) notFound();
 
-    const { data: otherProducts } = await supabase
+    const { data: otherProducts, statusText: OP } = await supabase
         .from('products')
         .select('id, name, price, product_images')
         .match({ store_id: product.store_id, author_id: product.author_id })

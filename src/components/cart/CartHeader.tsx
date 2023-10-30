@@ -32,7 +32,7 @@ const CartHeader = async () => {
                     )}
                 </Button>
             </SheetTrigger>
-            <SheetContent className="sm:max-w-xl w-full">
+            <SheetContent className="sm:max-w-xl w-full px-0">
                 <CartHeaderContent cart={cart} />
             </SheetContent>
         </Sheet>

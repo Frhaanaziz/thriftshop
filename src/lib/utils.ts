@@ -88,6 +88,15 @@ export function toTitleCase(str: string) {
     return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
 }
 
+export function toTitleCaseWithStrip(str: string) {
+    return str
+        .split(/-/g)
+        .map((word) => {
+            return word.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+        })
+        .join('-');
+}
+
 export function toSentenceCase(str: string) {
     return str.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 }
@@ -102,16 +111,22 @@ export function isArrayOfFile(files: unknown): files is File[] {
 //     return `${env.NEXT_PUBLIC_APP_URL}${path}`;
 // }
 
-export function catchError(err: unknown) {
+export function catchError(err: unknown, toastId?: string) {
     if (err instanceof z.ZodError) {
         const errors = err.issues.map((issue) => {
             return issue.message;
         });
-        return toast.error(errors.join('\n'));
+        return toast.error(errors.join('\n'), {
+            id: toastId ?? '',
+        });
     } else if (err instanceof Error) {
-        return toast.error(err.message);
+        return toast.error(err.message, {
+            id: toastId ?? '',
+        });
     } else {
-        return toast.error('Something went wrong, please try again later.');
+        return toast.error('Something went wrong, please try again later.', {
+            id: toastId ?? '',
+        });
     }
 }
 
@@ -128,6 +143,24 @@ export async function uploadProductImages({ supabase, files, storeId }: uploadPr
         throw new Error('Something wrong when uploading product image');
 
     return results;
+}
+
+export function getInitials(name?: string) {
+    if (!name || name.length === 0) return 'CN';
+
+    const splitName = name.split(' ');
+
+    if (splitName.length === 1) {
+        return splitName[0].slice(0, 2).toUpperCase();
+    } else {
+        return (splitName[0][0] + splitName[1][0]).toUpperCase();
+    }
+}
+
+export function isValidUUID(str: string) {
+    const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    return regex.test(str);
 }
 
 type uploadProductImagesProps = {

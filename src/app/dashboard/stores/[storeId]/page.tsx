@@ -8,14 +8,9 @@ type StoreManageProps = {
 };
 
 const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
-    const {
-        data: { user },
-    } = await getUserAction();
+    const author_id = (await getUserAction()).data.user.id;
 
-    const author_id = user.id;
-
-    const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
-    if (error) throw new Error('stores not found');
+    const stores = (await getUserStoresAction({ input: { author_id } })).data;
 
     const currentStore = stores.find((store) => store.id === storeId);
 

@@ -33,14 +33,16 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
     async function onSubmit(data: Inputs) {
         try {
             setIsLoading(true);
+            toast.loading('Adding to cart...', { id });
 
             await addToCartAction({
                 productId,
                 quantity: data.quantity,
             });
-            toast.success('Added to cart.');
+
+            toast.success('Added to cart.', { id });
         } catch (err) {
-            catchError(err);
+            catchError(err, id);
         } finally {
             setIsLoading(false);
         }

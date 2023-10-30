@@ -4,7 +4,7 @@ import { AspectRatio } from '../ui/aspect-ratio';
 const CategoriesCardImage = ({ image }: { image: string }) => {
     return (
         <AspectRatio ratio={16 / 9}>
-            <div className="absolute inset-0 z-10 bg-zinc-950/70 transition-colors group-hover:bg-zinc-950/75" />
+            <div className="absolute inset-0 z-10 bg-primary/40 dark:bg-primary-foreground/70 transition-colors dark:group-hover:bg-primary-foreground/75" />
             <Image
                 src={image}
                 alt="thrift"

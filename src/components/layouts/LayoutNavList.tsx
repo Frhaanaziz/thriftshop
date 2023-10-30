@@ -3,7 +3,8 @@ import { buttonVariants } from '@components/ui/button';
 import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';
 
-const navConfig = ['store', 'products', 'orders', 'customers', 'analytics'];
+// const navConfig = ['store', 'products', 'orders', 'customers', 'analytics'];
+const navConfig = ['store', 'products'];
 
 const LayoutNavList = ({ storeId }: { storeId: string }) => {
     const segment = useSelectedLayoutSegment();

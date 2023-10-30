@@ -3,8 +3,9 @@
 import { supabaseServerActionClient } from '@database/supabase';
 import { Stores } from '@types';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-export async function getUserStoresAction({ input }: getUserStoresProps) {
+export async function getUserStoresAction({ input }: { input: Stores['Update'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('stores').select('*').match(input);
     if (result.error) throw result.error;
@@ -12,17 +13,18 @@ export async function getUserStoresAction({ input }: getUserStoresProps) {
     return result;
 }
 
-export async function addStoreAction({ input }: AddStoreProps) {
+export async function addStoreAction({ input }: { input: Stores['Insert'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('stores').insert(input);
     if (result.error?.code === '23505') throw new Error('The store name is already registered');
     if (result.error) throw result.error;
 
     revalidatePath('/dashboard/stores');
+    redirect('/dashboard/stores')
     return result;
 }
 
-export async function updateStoreAction({ input }: UpdateStoreProps) {
+export async function updateStoreAction({ input }: { input: Stores['Insert'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('stores').upsert(input);
     if (result.error?.code === '23505') throw new Error('The store name is already registered');
@@ -32,30 +34,12 @@ export async function updateStoreAction({ input }: UpdateStoreProps) {
     return result;
 }
 
-export async function deleteStoreAction({ input }: DeleteStoreProps) {
+export async function deleteStoreAction({ input }: { input: Pick<Stores['Row'], 'id' | 'author_id'> }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('stores').delete().match(input);
     if (result.error) throw result.error;
 
     revalidatePath('/dashboard/stores');
+    redirect('/dashboard/stores');
     return result;
 }
-
-type DeleteStoreProps = {
-    input: {
-        id: string;
-        author_id: string;
-    };
-};
-
-type UpdateStoreProps = {
-    input: Stores['Insert'];
-};
-
-type AddStoreProps = {
-    input: Stores['Insert'];
-};
-
-type getUserStoresProps = {
-    input: Stores['Update'];
-};

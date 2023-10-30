@@ -14,17 +14,18 @@ export default async function Home() {
     const { data: products } = await supabase
         .from('products')
         .select('id, name, price, product_images')
-        .limit(8);
+        .limit(8)
+        .order('created_at', { ascending: false });
     const { data: stores } = await supabase.from('stores').select('id, name, description').limit(4);
 
     return (
         <div className="container mb-14">
             <div className="my-28 flex flex-col items-center">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center animate-fade-up bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text tracking-[-0.02em] text-transparent drop-shadow-sm py-2">
                     {siteConfig.description}
                 </h1>
 
-                <p className="text-muted-foreground text-center text-lg lg:text-2xl my-5">
+                <p className="text-muted-foreground text-center text-lg lg:text-2xl mt-3 mb-5">
                     <Balancer>
                         Buy and sell product from independent brands and stores around the world with ease
                     </Balancer>

@@ -33,6 +33,7 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
                 </div>
             </>
         );
+
     const supabase = supabaseServerComponentClient();
     const totalProductItems = cart.items.reduce((acc, item) => acc + item.quantity, 0);
     const productCart = await Promise.all(
@@ -52,14 +53,14 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
 
     return (
         <>
-            <SheetHeader className="mb-3">
+            <SheetHeader className="mb-3 px-6">
                 <SheetTitle className="text-xl">Cart {`(${totalProductItems})`} </SheetTitle>
             </SheetHeader>
 
             <Separator />
 
             <ScrollArea className="h-[73vh]">
-                <div className="divide-y border-b">
+                <div className="divide-y px-6">
                     {cart.items?.map(async (cartItem, i) => {
                         const item = cartItem as CartItem;
                         const product = productCart.at(i);
@@ -106,7 +107,7 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
                 </div>
             </ScrollArea>
 
-            <SheetFooter>
+            <SheetFooter className="px-6">
                 <div className="w-full">
                     <div className="flex flex-col gap-1 py-5 border-t">
                         <div className="flex justify-between">

@@ -5,7 +5,7 @@ import { categories } from '@lib/constant';
 import { Products } from '@types';
 import { revalidatePath } from 'next/cache';
 
-export async function getProductAction({ input }: getProductProps) {
+export async function getProductAction({ input }: { input: Products['Update'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').select('*').match(input).maybeSingle();
     if (result.error) throw result.error;
@@ -13,7 +13,7 @@ export async function getProductAction({ input }: getProductProps) {
     return result;
 }
 
-export async function getProductsAction({ input }: getProductProps) {
+export async function getProductsAction({ input }: { input: Products['Update'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').select('*').match(input);
     if (result.error) throw result.error;
@@ -21,7 +21,7 @@ export async function getProductsAction({ input }: getProductProps) {
     return result;
 }
 
-export async function uploadProductAction({ input }: UploadProductProps) {
+export async function uploadProductAction({ input }: { input: Products['Insert'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').insert(input);
     if (result.error) throw result.error;
@@ -30,7 +30,13 @@ export async function uploadProductAction({ input }: UploadProductProps) {
     return result;
 }
 
-export async function deleteProductAction({ input, path }: DeleteProductProps) {
+export async function deleteProductAction({
+    input,
+    path,
+}: {
+    input: Pick<Products['Row'], 'id' | 'author_id' | 'store_id'>;
+    path?: string;
+}) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').delete().match(input);
     if (result.error) throw result.error;
@@ -39,11 +45,12 @@ export async function deleteProductAction({ input, path }: DeleteProductProps) {
     return result;
 }
 
-export async function updateProductAction({ input }: UpdateProductProps) {
+export async function updateProductAction({ input }: { input: Products['Insert'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('products').upsert(input);
     if (result.error) throw result.error;
 
+    revalidatePath('/dashboard/stores/[storeId]/products', 'page');
     return result;
 }
 
@@ -66,24 +73,3 @@ export async function filterProductsAction(query: string) {
 
     return productsByCategory;
 }
-
-type UpdateProductProps = {
-    input: Products['Insert'];
-};
-
-type DeleteProductProps = {
-    input: {
-        id: string;
-        author_id: string;
-        store_id: string;
-    };
-    path?: string;
-};
-
-type getProductProps = {
-    input: Products['Update'];
-};
-
-type UploadProductProps = {
-    input: Products['Insert'];
-};

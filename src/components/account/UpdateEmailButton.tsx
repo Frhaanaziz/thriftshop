@@ -3,7 +3,7 @@ import { Button } from '@components/ui/button';
 import { Database } from '@database/database.types';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Profiles } from '@types';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useId, useState } from 'react';
 
 import {
     Dialog,
@@ -18,7 +18,6 @@ import { Label } from '@components/ui/label';
 import { Input } from '@components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { catchError } from '@lib/utils';
 
 type UpdateNameButtonProps = {
@@ -29,14 +28,18 @@ const UpdateEmailButton = ({ profile }: UpdateNameButtonProps) => {
     const [changedEmail, setChangedEmail] = useState<string>(profile?.email);
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const router = useRouter();
     const supabase = createClientComponentClient<Database>();
+
+    const id = useId();
 
     async function handleUpdateProfileEmail(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsOpen(false);
 
         try {
+            setIsUpdating(true);
+            toast.loading('Updating email', { id });
+
             const { error } = await supabase.auth.updateUser(
                 { email: changedEmail },
                 {
@@ -45,9 +48,11 @@ const UpdateEmailButton = ({ profile }: UpdateNameButtonProps) => {
             );
             if (error) throw error;
 
-            toast.success('Check your new email for confirmation');
+            toast.success('Check your new email for confirmation', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
+        } finally {
+            setIsUpdating(false);
         }
     }
 

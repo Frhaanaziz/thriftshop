@@ -11,3 +11,8 @@ export type Products = Database['public']['Tables']['products'];
 export type Cart = Omit<Database['public']['Tables']['carts']['Row'], 'items'> & { items: CartItem[] };
 
 export type CartItem = z.infer<typeof cartItemSchema>;
+
+export interface Auth {
+    email: string;
+    password: string;
+}

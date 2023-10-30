@@ -13,6 +13,7 @@ import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Link from 'next/link';
 import { getProfileAction } from '@app/_actions/user';
 import { User as UserType } from '@supabase/supabase-js';
+import { getInitials } from '@lib/utils';
 
 const DropdownHeader = async ({ user_id }: { user_id: UserType['id'] }) => {
     const { data: profile } = await getProfileAction({ user_id });
@@ -25,7 +26,7 @@ const DropdownHeader = async ({ user_id }: { user_id: UserType['id'] }) => {
                         src={`${profile?.avatar_url || DEFAULT_PROFILE_URL}`}
                         alt="avatar"
                     />
-                    <AvatarFallback delayMs={100}>CN</AvatarFallback>
+                    <AvatarFallback>{getInitials(profile?.fullName)}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

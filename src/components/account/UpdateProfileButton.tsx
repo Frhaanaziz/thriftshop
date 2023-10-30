@@ -2,8 +2,7 @@
 import { Button } from '@components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog';
 import { Separator } from '@components/ui/separator';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import Dropzone from 'react-dropzone';
@@ -21,31 +20,21 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { deleteAvatarAction, updateProfileAction } from '@app/_actions/user';
-import { catchError } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
+import { Profiles } from '@types';
+import { catchError } from '@lib/utils';
 
-interface Profile {
-    user_id: string;
-    created_at: string;
-    fullName: string;
-    email: string;
-    avatar_url: string | null;
-}
-
-const UpdateProfileButton = ({ profile }: { profile: Profile }) => {
+const UpdateProfileButton = ({ profile }: { profile: Profiles['Row'] }) => {
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const router = useRouter();
 
-    const removeAvatar = async () => {
-        try {
-            await deleteAvatarAction({ profile });
-
-            toast.success('Avatar deleted successfully');
-        } catch (error) {
-            catchError(error);
-        }
+    const removeAvatar = () => {
+        toast.promise(deleteAvatarAction({ profile }), {
+            loading: 'Deleting avatar...',
+            success: 'Avatar deleted successfully',
+            error: (err) => err.message,
+        });
     };
 
     return (
@@ -82,7 +71,7 @@ const UpdateProfileButton = ({ profile }: { profile: Profile }) => {
                     <Button
                         type="button"
                         size="sm"
-                        disabled={isUploading}
+                        disabled={isUploading || !profile.avatar_url}
                     >
                         Remove
                     </Button>
@@ -113,15 +102,18 @@ const UploadDropzone = ({
     profile,
     isUploading,
 }: {
-    profile: Profile;
+    profile: Profiles['Row'];
     isUploading: (isUploading: boolean) => void;
 }) => {
+    const id = useId();
+
     return (
         <Dropzone
             multiple={false}
             onDrop={async (acceptedFile) => {
                 try {
                     isUploading(true);
+                    toast.loading('Uploading avatar...', { id });
 
                     if (!acceptedFile || acceptedFile.length === 0) {
                         throw new Error('You must select an image to upload.');
@@ -142,9 +134,9 @@ const UploadDropzone = ({
                         filePath,
                     });
 
-                    toast.success('Avatar updated!');
-                } catch (error) {
-                    catchError(error);
+                    toast.success('Avatar updated!', { id });
+                } catch (error: unknown) {
+                    if (error instanceof Error) catchError(error, id);
                 } finally {
                     isUploading(false);
                 }

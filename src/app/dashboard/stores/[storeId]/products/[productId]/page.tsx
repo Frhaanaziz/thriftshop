@@ -9,9 +9,7 @@ const UpdateProductPage = async ({
 }: {
     params: { productId: string; storeId: string };
 }) => {
-    const {
-        data: { user },
-    } = await getUserAction();
+    const user = (await getUserAction()).data.user;
 
     const { data: product } = await getProductAction({
         input: { id: productId, store_id: storeId, author_id: user.id },

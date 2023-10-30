@@ -13,7 +13,6 @@ import { Textarea } from '@components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ImageUploadFormField from './ImageUploadFormField';
 import toast from 'react-hot-toast';
-import { usePathname, useRouter } from 'next/navigation';
 import { newProductSchema } from '@lib/validations/product';
 import { categories, sub_category } from '@lib/constant';
 import { getUserAction } from '@app/_actions/user';
@@ -21,6 +20,7 @@ import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
+import { useId, useState } from 'react';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -37,6 +37,10 @@ const subCategoryValue = (value: string): string[] | undefined => {
 const supabase = createClientComponentClient<Database>();
 
 const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const id = useId();
+
     const form = useForm<z.infer<typeof newProductSchema>>({
         resolver: zodResolver(newProductSchema),
         defaultValues: {
@@ -55,11 +59,12 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
         const { category, inventory, name, price, sub_category, description } = formData;
         let productImageUrl: string[] | null = null;
 
-        const {
-            data: { user },
-        } = await getUserAction();
+        const user = (await getUserAction()).data.user;
 
         try {
+            setIsLoading(true);
+            toast.loading('Creating your product', { id });
+
             if (formData.image.length > 0) {
                 const results = await uploadProductImages({
                     supabase,
@@ -90,9 +95,11 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
             });
 
             reset();
-            toast.success('Successfully create your product');
+            toast.success('Product created successfully', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -112,6 +119,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                 <FormControl>
                                     <Input
                                         placeholder="Type product name here."
+                                        disabled={isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -129,6 +137,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                 <FormControl>
                                     <Textarea
                                         placeholder="Type product description here."
+                                        disabled={isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -149,7 +158,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                         defaultValue={field.value}
                                     >
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger disabled={isLoading}>
                                                 <SelectValue defaultValue={field.value} />
                                             </SelectTrigger>
                                         </FormControl>
@@ -177,7 +186,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                     <FormLabel>Subcategory</FormLabel>
                                     <Select onValueChange={field.onChange}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger disabled={isLoading}>
                                                 <SelectValue placeholder="Select a subcategory" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -206,6 +215,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                     <FormControl>
                                         <Input
                                             placeholder="Type product price here."
+                                            disabled={isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -225,6 +235,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                                             type="number"
                                             className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                             placeholder="Type product inventory here. (number)"
+                                            disabled={isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -237,6 +248,7 @@ const NewProductForm = ({ storeId: store_id }: { storeId: string }) => {
                     <ImageUploadFormField
                         control={control}
                         setValue={setValue}
+                        isLoading={isLoading}
                     />
                 </CardContent>
 

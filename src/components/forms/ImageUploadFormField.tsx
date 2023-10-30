@@ -3,19 +3,18 @@ import { Button } from '@components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form';
 import { Input } from '@components/ui/input';
-import { Database } from '@database/database.types';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Accessibility, Cloud, File } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Cloud, File } from 'lucide-react';
 import { useState } from 'react';
 import Dropzone from 'react-dropzone';
-import toast from 'react-hot-toast';
 
-const ImageUploadFormField = ({ control, setValue }: { control: any; setValue: any }) => {
-    const [isUploading, setIsUploading] = useState<boolean>(false);
+interface Props {
+    control: any;
+    setValue: any;
+    isLoading: boolean;
+}
+
+const ImageUploadFormField = ({ control, setValue, isLoading }: Props) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const router = useRouter();
-    const supabase = createClientComponentClient<Database>();
 
     return (
         <FormField
@@ -31,12 +30,12 @@ const ImageUploadFormField = ({ control, setValue }: { control: any; setValue: a
                     >
                         <DialogTrigger
                             onClick={() => setIsOpen(true)}
-                            disabled={isUploading}
+                            disabled={isLoading}
                             asChild
                         >
                             <Button
                                 size="sm"
-                                variant="ghost"
+                                variant="secondary"
                                 className="w-full border"
                             >
                                 Upload Images
@@ -45,7 +44,7 @@ const ImageUploadFormField = ({ control, setValue }: { control: any; setValue: a
 
                         <DialogContent>
                             <Dropzone
-                                onDrop={async (acceptedFile, fileRejection, event) => {
+                                onDrop={async (acceptedFile) => {
                                     setValue('image', acceptedFile, { shoudValidate: true });
                                     setIsOpen(false);
                                 }}
@@ -81,7 +80,6 @@ const ImageUploadFormField = ({ control, setValue }: { control: any; setValue: a
                                                             </div>
 
                                                             <div className="px-3 py-2 h-full text-sm truncate">
-                                                                {/* {acceptedFiles?.at(0)?.name} */}
                                                                 {acceptedFiles.map((file) => file.name)}
                                                             </div>
                                                         </div>
@@ -93,7 +91,6 @@ const ImageUploadFormField = ({ control, setValue }: { control: any; setValue: a
                                                                 id="dropzone-file"
                                                                 className="hidden"
                                                                 {...getInputProps()}
-                                                                // {...field}
                                                             />
                                                         </FormControl>
                                                     </FormItem>

@@ -4,9 +4,8 @@ import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { catchError } from '@lib/utils';
 import { updateCartItemSchema } from '@lib/validations/cart';
-import { id } from 'date-fns/locale';
 import { MinusIcon, PlusIcon, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import toast from 'react-hot-toast';
 import z from 'zod';
 
@@ -14,17 +13,21 @@ type Inputs = z.infer<typeof updateCartItemSchema>;
 
 const CartCounter = ({ productId, quantity }: { productId: string; quantity: number }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const id = useId();
 
     async function onSubmit(data: Inputs) {
         try {
             setIsLoading(true);
+            toast.loading('Updating cart...', { id });
+
             await updateCartItemQuantityAction({
                 productId,
                 quantity: data.quantity,
             });
-            toast.success('Cart updated.');
+
+            toast.success('Cart updated.', { id });
         } catch (err) {
-            catchError(err);
+            catchError(err, id);
         } finally {
             setIsLoading(false);
         }
@@ -33,10 +36,13 @@ const CartCounter = ({ productId, quantity }: { productId: string; quantity: num
     async function handleDeleteCartitem() {
         try {
             setIsLoading(true);
+            toast.loading('Deleting cart item...', { id });
+
             await deleteCartItemAction({ productId, quantity });
-            toast.success('Cart item deleted.');
+
+            toast.success('Cart item deleted.', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
         } finally {
             setIsLoading(false);
         }

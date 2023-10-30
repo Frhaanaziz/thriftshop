@@ -12,47 +12,48 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Stores } from '@types';
 import DeleteStoreButton from './DeleteStoreButton';
-import { useRouter } from 'next/navigation';
 import { updateStoreSchema } from '@lib/validations/store';
 import { deleteStoreAction, updateStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
+import { useId } from 'react';
 
-type UpdateStoreCardProps = {
-    currentStore: Stores['Row'];
-};
-
-const UpdateStoreCard = ({ currentStore }: UpdateStoreCardProps) => {
+const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
     const { author_id, description, id, name } = currentStore;
 
-    const router = useRouter();
+    const toastId = useId();
+
+    const defaultValues = { name, description: description ?? '' };
 
     const form = useForm<z.infer<typeof updateStoreSchema>>({
         resolver: zodResolver(updateStoreSchema),
-        defaultValues: {
-            name,
-            description: description ?? '',
-        },
+        defaultValues,
     });
     const { handleSubmit, control } = form;
 
     async function onSubmit(formData: z.infer<typeof updateStoreSchema>) {
+        if (JSON.stringify(formData) === JSON.stringify(defaultValues))
+            return toast.error('You did not change anything', { id: toastId });
+
         try {
+            toast.loading('Updating your store...', { id: toastId });
+
             await updateStoreAction({ input: { ...formData, author_id, id } });
 
-            toast.success('Successfully update your store');
+            toast.success('Successfully update your store', { id: toastId });
         } catch (error) {
-            catchError(error);
+            catchError(error, toastId);
         }
     }
 
     async function handleDeleteStore() {
         try {
+            toast.loading('Deleting your store...', { id: toastId });
+
             await deleteStoreAction({ input: { id, author_id } });
 
-            router.replace('/dashboard/stores');
-            toast.success('Successfully deleted your store');
+            toast.success('Successfully deleted your store', { id: toastId });
         } catch (error) {
-            catchError(error);
+            catchError(error, toastId);
         }
     }
 

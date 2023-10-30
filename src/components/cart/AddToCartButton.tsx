@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Button } from '../ui/button';
 import toast from 'react-hot-toast';
 import { catchError, cn } from '@lib/utils';
@@ -9,18 +9,21 @@ import { Loader2 } from 'lucide-react';
 
 const AddToCartButton = ({ productId, className }: { productId: string; className?: string }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const id = useId();
 
     async function handleAddToCart() {
         try {
             setIsLoading(true);
+            toast.loading('Adding to cart...', { id });
 
             await addToCartAction({
                 productId,
                 quantity: 1,
             });
-            toast.success('Added to cart.');
+
+            toast.success('Added to cart.', { id });
         } catch (err) {
-            catchError(err);
+            catchError(err, id);
         } finally {
             setIsLoading(false);
         }

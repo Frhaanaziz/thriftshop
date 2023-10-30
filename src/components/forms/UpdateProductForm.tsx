@@ -18,10 +18,11 @@ import { categories, sub_category } from '@lib/constant';
 import { deleteProductAction, updateProductAction } from '@app/_actions/product';
 import { Products } from '@types';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
+import image from 'next/image';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -38,10 +39,20 @@ const subCategoryValue = (value: string): string[] | undefined => {
 const supabase = createClientComponentClient<Database>();
 
 const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
-    const [isUpdating, setIsUpdating] = useState<boolean>(false);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const router = useRouter();
+    const id = useId();
+
+    const defaultValues = {
+        name: product.name,
+        description: product.description ?? '',
+        category: product.category,
+        sub_category: product.sub_category,
+        price: product.price,
+        inventory: product.inventory as unknown as number,
+        image: [],
+    };
 
     const form = useForm<z.infer<typeof updateProductSchema>>({
         resolver: zodResolver(updateProductSchema),
@@ -58,11 +69,15 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
     const { handleSubmit, control, watch, setValue } = form;
 
     async function onSubmit(formData: z.infer<typeof updateProductSchema>) {
+        if (JSON.stringify(formData) === JSON.stringify(defaultValues))
+            return toast.error('You have not changed anything', { id });
+
         const { category, inventory, name, price, sub_category, description } = formData;
         let productImageUrl: string[] | null = null;
 
         try {
-            setIsUpdating(true);
+            setIsLoading(true);
+            toast.loading('Updating your product', { id });
 
             if (formData.image.length > 0) {
                 const results = await uploadProductImages({
@@ -94,17 +109,18 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                 },
             });
 
-            toast.success('Successfully create your product');
+            toast.success('Successfully create your product', { id });
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
         } finally {
-            setIsUpdating(false);
+            setIsLoading(false);
         }
     }
 
     async function handleDeleteProduct() {
         try {
-            setIsDeleting(true);
+            setIsLoading(true);
+            toast.loading('Deleting your product', { id });
 
             await deleteProductAction({
                 input: {
@@ -112,15 +128,14 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                     id: product.id,
                     store_id: product.store_id,
                 },
-                // path: `/dashboard/stores/${product.store_id}/products`,
             });
 
+            toast.success('Product deleted successfully', { id });
             router.replace(`/dashboard/stores/${product.store_id}/products`);
-            toast.success('Product deleted successfully');
         } catch (error) {
-            catchError(error);
+            catchError(error, id);
         } finally {
-            setIsDeleting(false);
+            setIsLoading(false);
         }
     }
 
@@ -140,6 +155,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                 <FormControl>
                                     <Input
                                         placeholder="Type product name here."
+                                        disabled={isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -157,6 +173,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                 <FormControl>
                                     <Textarea
                                         placeholder="Type product description here."
+                                        disabled={isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -177,7 +194,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                         defaultValue={field.value}
                                     >
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger disabled={isLoading}>
                                                 <SelectValue defaultValue={field.value} />
                                             </SelectTrigger>
                                         </FormControl>
@@ -205,7 +222,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                     <FormLabel>Subcategory</FormLabel>
                                     <Select onValueChange={field.onChange}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger disabled={isLoading}>
                                                 <SelectValue
                                                     placeholder={field.value}
                                                     defaultValue={field.value}
@@ -237,6 +254,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                     <FormControl>
                                         <Input
                                             placeholder="Type product price here."
+                                            disabled={isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -256,6 +274,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                                             type="number"
                                             className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                             placeholder="Type product inventory here. (number)"
+                                            disabled={isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -268,14 +287,21 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                     <ImageUploadFormField
                         control={control}
                         setValue={setValue}
+                        isLoading={isLoading}
                     />
                 </CardContent>
 
                 <CardFooter className="space-x-3">
-                    <Button type="submit">Update Product</Button>
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                    >
+                        Update Product
+                    </Button>
                     <Button
                         type="button"
                         variant="destructive"
+                        disabled={isLoading}
                         onClick={handleDeleteProduct}
                     >
                         Delete Product

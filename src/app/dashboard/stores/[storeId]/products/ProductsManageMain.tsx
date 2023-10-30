@@ -6,11 +6,7 @@ import { Products } from '@types';
 import { DataTable } from '../../../../../components/data-table/DataTable';
 import { columns } from '../../../../../components/data-table/Columns';
 
-type Props = {
-    products: Products['Row'][];
-};
-
-const ProductsManageMain = ({ products: data }: Props) => {
+const ProductsManageMain = ({ products: data }: { products: Products['Row'][] }) => {
     const [date, setDate] = useState<DateRange | undefined>({
         from: undefined,
         to: undefined,
