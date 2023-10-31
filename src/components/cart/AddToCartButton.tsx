@@ -16,10 +16,11 @@ const AddToCartButton = ({ productId, className }: { productId: string; classNam
             setIsLoading(true);
             toast.loading('Adding to cart...', { id });
 
-            await addToCartAction({
+            const result = await addToCartAction({
                 productId,
                 quantity: 1,
             });
+            if (result?.errorMessage) throw new Error(result.errorMessage);
 
             toast.success('Added to cart.', { id });
         } catch (err) {

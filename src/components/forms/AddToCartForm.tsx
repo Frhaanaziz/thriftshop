@@ -4,14 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { catchError, cn } from '@/lib/utils';
+import { catchError } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
-import { useId, useState, useTransition } from 'react';
+import { useId, useState } from 'react';
 import { updateCartItemSchema } from '@lib/validations/cart';
 
 interface AddToCartFormProps {
@@ -21,8 +21,6 @@ interface AddToCartFormProps {
 type Inputs = z.infer<typeof updateCartItemSchema>;
 
 export function AddToCartForm({ productId }: AddToCartFormProps) {
-    const [isPending, startTransition] = useTransition();
-
     const id = useId();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const form = useForm<Inputs>({

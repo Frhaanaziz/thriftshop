@@ -12,10 +12,10 @@ const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
     if (!author_id) notFound();
 
     const stores = (await getUserStoresAction({ input: { author_id } })).data;
+    if (!stores) notFound();
 
     const currentStore = stores.find((store) => store.id === storeId);
-
-    if (!stores || !currentStore) notFound();
+    if (!currentStore) notFound();
 
     return (
         <div className="space-y-7">

@@ -20,14 +20,15 @@ export async function addStoreAction({ input }: { input: Stores['Insert'] }) {
     if (result.error) throw result.error;
 
     revalidatePath('/dashboard/stores');
-    redirect('/dashboard/stores')
+    redirect('/dashboard/stores');
     return result;
 }
 
 export async function updateStoreAction({ input }: { input: Stores['Insert'] }) {
     const supabase = supabaseServerActionClient();
+
     const result = await supabase.from('stores').upsert(input);
-    if (result.error?.code === '23505') throw new Error('The store name is already registered');
+    if (result.error?.code === '23505') result.error.message = 'The store name is already registered';
     if (result.error) throw result.error;
 
     revalidatePath('/dashboard/stores/[storeId]', 'page');

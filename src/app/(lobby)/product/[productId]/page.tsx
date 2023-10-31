@@ -109,7 +109,7 @@ const ProductPage = async ({ params: { productId } }: { params: { productId: str
                 </div>
             </section>
 
-            {otherProducts && (
+            {otherProducts && otherProducts.length > 0 && (
                 <section className="my-10">
                     <h2 className="text-2xl font-bold">More products from {store.name}</h2>
                     <div className="overflow-x-auto pb-2 pt-6">

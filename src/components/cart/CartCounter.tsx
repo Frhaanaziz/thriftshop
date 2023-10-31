@@ -20,10 +20,11 @@ const CartCounter = ({ productId, quantity }: { productId: string; quantity: num
             setIsLoading(true);
             toast.loading('Updating cart...', { id });
 
-            await updateCartItemQuantityAction({
+            const result = await updateCartItemQuantityAction({
                 productId,
                 quantity: data.quantity,
             });
+            if (result?.errorMessage) throw new Error(result.errorMessage);
 
             toast.success('Cart updated.', { id });
         } catch (err) {
@@ -38,7 +39,8 @@ const CartCounter = ({ productId, quantity }: { productId: string; quantity: num
             setIsLoading(true);
             toast.loading('Deleting cart item...', { id });
 
-            await deleteCartItemAction({ productId, quantity });
+            const result = await deleteCartItemAction({ productId, quantity });
+            if (result?.errorMessage) throw new Error(result.errorMessage);
 
             toast.success('Cart item deleted.', { id });
         } catch (error) {

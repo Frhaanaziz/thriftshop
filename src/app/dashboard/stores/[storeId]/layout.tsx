@@ -14,12 +14,11 @@ const StoreManageLayout = async ({ params: { storeId }, children }: StoreManageP
     const author_id = (await getUserAction())?.id;
     if (!author_id) notFound();
 
-    const { data: stores, error } = await getUserStoresAction({ input: { author_id } });
-    if (error) throw new Error('Stores not found');
+    const stores = (await getUserStoresAction({ input: { author_id } })).data;
+    if (!stores) notFound();
 
     const currentStore = stores.find((store) => store.id === storeId);
-
-    if (!stores || !currentStore) notFound();
+    if (!currentStore) notFound();
 
     return (
         <>

@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import DateRangePicker from '../../../../../components/DateRangePicker';
 import { Products } from '@types';
-import { DataTable } from '../../../../../components/data-table/DataTable';
-import { columns } from '../../../../../components/data-table/Columns';
+import DateRangePicker from '@components/DateRangePicker';
+import { columns } from '@components/data-table/Columns';
+import { DataTable } from '@components/data-table/DataTable';
 
 const ProductsManageMain = ({ products: data }: { products: Products['Row'][] }) => {
     const [date, setDate] = useState<DateRange | undefined>({

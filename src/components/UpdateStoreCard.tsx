@@ -37,7 +37,8 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
         try {
             toast.loading('Updating your store...', { id: toastId });
 
-            await updateStoreAction({ input: { ...formData, author_id, id } });
+            const { error } = await updateStoreAction({ input: { ...formData, author_id, id } });
+            if (error) throw new Error('Failed to update your store, please try again.');
 
             toast.success('Successfully update your store', { id: toastId });
         } catch (error) {

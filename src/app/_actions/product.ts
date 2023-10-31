@@ -73,3 +73,12 @@ export async function filterProductsAction(query: string) {
 
     return productsByCategory;
 }
+
+export async function getProductInventoryAction(productId: string) {
+    const supabase = supabaseServerActionClient();
+
+    const result = await supabase.from('products').select('inventory').eq('id', productId).maybeSingle();
+    if (result.error) throw result.error;
+
+    return result;
+}
