@@ -1,10 +1,8 @@
-import Image from 'next/image';
-import { AspectRatio } from '../ui/aspect-ratio';
 import { Products } from '@types';
 import { formatPrice } from '@lib/utils';
 import Link from 'next/link';
-import EmptyImage from '../EmptyImage';
 import AddToCartButton from '../cart/AddToCartButton';
+import ProductImage from '@components/ProductImage';
 
 type ProductCardProps = {
     product: Pick<Products['Row'], 'id' | 'name' | 'price' | 'product_images'>;
@@ -14,18 +12,10 @@ const ProductCard = async ({ product }: ProductCardProps) => {
     return (
         <div className="border rounded overflow-hidden w-full h-full bg-card">
             <Link href={`/product/${product.id}`}>
-                <AspectRatio ratio={3 / 2}>
-                    {product.product_images ? (
-                        <Image
-                            src={product.product_images.at(0)!}
-                            alt={product.name}
-                            sizes="(min-width: 1024px) 15vw, (min-width: 768px) 25vw, (min-width: 640px) 30vw, (min-width: 475px) 35vw, 100vw"
-                            fill
-                        />
-                    ) : (
-                        <EmptyImage />
-                    )}
-                </AspectRatio>
+                <ProductImage
+                    product_images={product.product_images}
+                    name={product.name}
+                />
 
                 <div className="p-4">
                     <p className="text-xl font-semibold truncate">{product.name}</p>

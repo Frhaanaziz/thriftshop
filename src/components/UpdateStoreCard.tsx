@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 import { Stores } from '@types';
 import DeleteStoreButton from './DeleteStoreButton';
 import { updateStoreSchema } from '@lib/validations/store';
-import { deleteStoreAction, updateStoreAction } from '@app/_actions/store';
+import { updateStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 import { useId } from 'react';
 
@@ -37,22 +37,10 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
         try {
             toast.loading('Updating your store...', { id: toastId });
 
-            const { error } = await updateStoreAction({ input: { ...formData, author_id, id } });
-            if (error) throw new Error('Failed to update your store, please try again.');
+            const result = await updateStoreAction({ input: { ...formData, author_id, id } });
+            if (result.error) throw new Error(result.error.message);
 
             toast.success('Successfully update your store', { id: toastId });
-        } catch (error) {
-            catchError(error, toastId);
-        }
-    }
-
-    async function handleDeleteStore() {
-        try {
-            toast.loading('Deleting your store...', { id: toastId });
-
-            await deleteStoreAction({ input: { id, author_id } });
-
-            toast.success('Successfully deleted your store', { id: toastId });
         } catch (error) {
             catchError(error, toastId);
         }
@@ -109,7 +97,10 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
                     </CardContent>
                     <CardFooter className="space-x-2">
                         <Button size="sm">Update store</Button>
-                        <DeleteStoreButton handleDeleteStore={handleDeleteStore} />
+                        <DeleteStoreButton
+                            author_id={author_id}
+                            id={id}
+                        />
                     </CardFooter>
                 </form>
             </Form>

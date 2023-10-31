@@ -16,11 +16,10 @@ export async function getUserStoresAction({ input }: { input: Stores['Update'] }
 export async function addStoreAction({ input }: { input: Stores['Insert'] }) {
     const supabase = supabaseServerActionClient();
     const result = await supabase.from('stores').insert(input);
-    if (result.error?.code === '23505') throw new Error('The store name is already registered');
-    if (result.error) throw result.error;
+    if (result.error?.code === '23505') result.error.message = 'The store name is already registered';
+    else if (result.error) result.error.message = 'Failed to create your store, please try again.';
 
     revalidatePath('/dashboard/stores');
-    redirect('/dashboard/stores');
     return result;
 }
 
@@ -29,7 +28,7 @@ export async function updateStoreAction({ input }: { input: Stores['Insert'] }) 
 
     const result = await supabase.from('stores').upsert(input);
     if (result.error?.code === '23505') result.error.message = 'The store name is already registered';
-    if (result.error) throw result.error;
+    else if (result.error) result.error.message = 'Failed to update your store, please try again.';
 
     revalidatePath('/dashboard/stores/[storeId]', 'page');
     return result;
@@ -37,10 +36,9 @@ export async function updateStoreAction({ input }: { input: Stores['Insert'] }) 
 
 export async function deleteStoreAction({ input }: { input: Pick<Stores['Row'], 'id' | 'author_id'> }) {
     const supabase = supabaseServerActionClient();
-    const result = await supabase.from('stores').delete().match(input);
-    if (result.error) throw result.error;
+
+    await supabase.from('stores').delete().match(input);
 
     revalidatePath('/dashboard/stores');
     redirect('/dashboard/stores');
-    return result;
 }

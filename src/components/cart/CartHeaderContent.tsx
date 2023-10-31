@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { Button } from '@components/ui/button';
 import { ScrollArea } from '@components/ui/scroll-area';
 import { supabaseServerComponentClient } from '@database/supabase';
+import ProductImage from '@components/ProductImage';
 
 interface CartHeaderContentProps {
     cart: {
@@ -71,21 +72,12 @@ const CartHeaderContent = async ({ cart }: CartHeaderContentProps) => {
                                 key={item.productId}
                                 className="flex py-4"
                             >
-                                <div className="mr-4">
-                                    {product.product_images?.at(0) ? (
-                                        <Image
-                                            src={product.product_images.at(0)!}
-                                            width={64}
-                                            height={64}
-                                            alt="Product Image"
-                                        />
-                                    ) : (
-                                        <div className="w-16 h-16">
-                                            <EmptyImage />
-                                        </div>
-                                    )}
+                                <div className="mr-4 w-20 flex justify-center items-center">
+                                    <ProductImage
+                                        product_images={product.product_images}
+                                        name={product.name}
+                                    />
                                 </div>
-
                                 <div className="space-y-0.5">
                                     <h4 className="font-semibold text-sm">{product.name}</h4>
                                     <p className="text-sm text-muted-foreground">

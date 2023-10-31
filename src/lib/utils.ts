@@ -124,6 +124,15 @@ export function isValidUUID(str: string) {
     return regex.test(str);
 }
 
+export async function checkImage(url: string | undefined) {
+    if (!url) return false;
+
+    const res = await fetch(url);
+    const buff = await res.blob();
+
+    return buff.type.startsWith('image/');
+}
+
 type uploadProductImagesProps = {
     supabase: SupabaseClient<Database>;
     files: File[];

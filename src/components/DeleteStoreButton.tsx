@@ -10,8 +10,27 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { deleteStoreAction } from '@app/_actions/store';
+import { catchError } from '@lib/utils';
+import { Stores } from '@types';
+import { useId } from 'react';
+import toast from 'react-hot-toast';
 
-const DeleteStoreButton = ({ handleDeleteStore }: { handleDeleteStore: () => Promise<void> }) => {
+const DeleteStoreButton = ({ id, author_id }: Pick<Stores['Row'], 'id' | 'author_id'>) => {
+    const toastId = useId();
+
+    async function handleDeleteStore() {
+        try {
+            toast.loading('Deleting your store...', { id: toastId });
+
+            await deleteStoreAction({ input: { id, author_id } });
+
+            toast.success('Successfully deleted your store', { id: toastId });
+        } catch (error) {
+            catchError(error, toastId);
+        }
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>

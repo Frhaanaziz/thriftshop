@@ -33,7 +33,7 @@ const UpdateProfileButton = ({ profile }: { profile: Profiles['Row'] }) => {
         toast.promise(deleteAvatarAction({ profile }), {
             loading: 'Deleting avatar...',
             success: 'Avatar deleted successfully',
-            error: (err) => err.message,
+            error: 'Failed to delete avatar',
         });
     };
 

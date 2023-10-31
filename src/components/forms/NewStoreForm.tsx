@@ -15,9 +15,11 @@ import { addStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 import { User } from '@supabase/supabase-js';
 import { useId } from 'react';
+import { useRouter } from 'next/navigation';
 
 const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
     const id = useId();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof newStoreSchema>>({
         resolver: zodResolver(newStoreSchema),
@@ -32,10 +34,12 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
         try {
             toast.loading('Creating your store...', { id });
 
-            await addStoreAction({ input: { author_id, name, description } });
+            const result = await addStoreAction({ input: { author_id, name, description } });
+            if (result.error) throw new Error(result.error.message);
 
             reset();
             toast.success('Successfully create your store', { id });
+            router.push('/dashboard/stores');
         } catch (error) {
             catchError(error, id);
         }

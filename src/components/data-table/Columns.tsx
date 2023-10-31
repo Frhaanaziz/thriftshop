@@ -177,10 +177,12 @@ function ActionCell({ row }: { row: Row<Products['Row']> }) {
                 <DropdownMenuItem
                     onClick={async () => {
                         const { author_id, id, store_id } = product;
+
                         const deleteProducts = deleteProductAction({
                             input: { author_id, id, store_id },
                             path,
                         });
+
                         toast.promise(deleteProducts, {
                             loading: 'Deleting...',
                             success: 'Product deleted successfully',

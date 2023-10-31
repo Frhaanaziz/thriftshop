@@ -63,7 +63,12 @@ export default async function Home() {
             <div>
                 <div className="flex justify-between my-5 items-center">
                     <h2 className="text-2xl md:text-4xl font-semibold">Featured products</h2>
-                    <Button>View all</Button>
+                    <Link
+                        href="/products"
+                        className={buttonVariants()}
+                    >
+                        View all
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:grid-cols-4">

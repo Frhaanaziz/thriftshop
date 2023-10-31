@@ -83,6 +83,7 @@ export async function updateCartItemQuantityAction(input: z.infer<typeof cartIte
             throw new Error(`Product is out of stock, max quantity is (${product.inventory})`);
 
         const cartItem = await getCartItemAction(cart, input.productId);
+        if (!cartItem) throw new Error('Cart item not found, please try again.');
 
         cartItem.quantity = input.quantity;
 
@@ -107,7 +108,6 @@ export async function createCartAndCookieAction(items: CartItem[]) {
 
 export async function getCartItemAction(cart: Cart, productId: Products['Row']['id']) {
     const cartItem = cart.items?.find((item: any) => item?.productId == productId) as CartItem | undefined;
-    if (!cartItem) throw new Error('Cart item not found, please try again.');
 
     return cartItem;
 }
@@ -118,8 +118,8 @@ export async function deleteCartAndCookieAction() {
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
 
-    const { error } = await supabase.from('carts').delete().eq('id', cartId);
-    if (error) throw error;
+    const result = await supabase.from('carts').delete().eq('id', cartId);
+    if (result.error) throw result.error;
 
     cookies().delete('cartId');
 }
@@ -130,8 +130,8 @@ export async function updateCartItemAction(cartItem: CartItem[]) {
     const cartId = cookies().get('cartId')?.value;
     if (!cartId) throw new Error('Cart not found, please try again.');
 
-    const { error } = await supabase.from('carts').update({ items: cartItem }).eq('id', cartId);
-    if (error) throw error;
+    const result = await supabase.from('carts').update({ items: cartItem }).eq('id', cartId);
+    if (result.error) throw result.error;
 }
 
 export async function getCartAction() {

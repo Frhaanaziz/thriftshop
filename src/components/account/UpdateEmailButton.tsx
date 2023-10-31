@@ -18,7 +18,7 @@ import { Label } from '@components/ui/label';
 import { Input } from '@components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
-import { catchError } from '@lib/utils';
+import { absoluteUrl, catchError } from '@lib/utils';
 
 type UpdateNameButtonProps = {
     profile: Profiles['Row'];
@@ -40,13 +40,15 @@ const UpdateEmailButton = ({ profile }: UpdateNameButtonProps) => {
             setIsUpdating(true);
             toast.loading('Updating email', { id });
 
-            const { error } = await supabase.auth.updateUser(
+            const result = await supabase.auth.updateUser(
                 { email: changedEmail },
                 {
-                    emailRedirectTo: `${location.origin}/api/auth/updateEmail?newEmail=${changedEmail}&userId=${profile.user_id}`,
+                    emailRedirectTo: absoluteUrl(
+                        `/api/auth/updateEmail?newEmail=${changedEmail}&userId=${profile.user_id}`
+                    ),
                 }
             );
-            if (error) throw error;
+            if (result.error) throw result.error;
 
             toast.success('Check your new email for confirmation', { id });
         } catch (error) {

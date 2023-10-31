@@ -1,6 +1,7 @@
 'use server';
 
 import { supabaseServerActionClient } from '@database/supabase';
+import { absoluteUrl, getErrorMessage } from '@lib/utils';
 import { User } from '@supabase/supabase-js';
 import { Auth, Profiles } from '@types';
 import { revalidatePath } from 'next/cache';
@@ -29,13 +30,14 @@ export async function updateProfileAction({
     filePath?: string;
 }) {
     const supabase = supabaseServerActionClient();
+
     const result = await supabase.from('profiles').upsert({
         ...profile,
         avatar_url: filePath
             ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${filePath}`
             : profile.avatar_url,
     });
-    if (result.error) throw result.error;
+    if (result.error) result.error.message = 'Failed to update your profile, please try again.';
 
     revalidatePath('/dashboard/account');
     return result;
@@ -61,26 +63,34 @@ export async function deleteAvatarAction({ profile }: { profile: Profiles['Inser
 
 export async function signUpUserAction({ input, fullName }: { input: Auth; fullName: string }) {
     const supabase = supabaseServerActionClient();
-    const result = await supabase.auth.signUp({
-        ...input,
-        options: {
-            emailRedirectTo: `${location.origin}/api/auth/callback?fullName=${fullName}`,
-        },
-    });
-    if (result.error) throw result.error.message;
 
-    return result;
+    try {
+        const result = await supabase.auth.signUp({
+            ...input,
+            options: {
+                emailRedirectTo: absoluteUrl(`/api/auth/callback?fullName=${fullName}`),
+            },
+        });
+        if (result.error) throw result.error;
+        return { result };
+    } catch (error) {
+        return { errorMessage: getErrorMessage(error) };
+    }
 }
 
 export async function signInUserAction({ input }: { input: Auth }) {
     const supabase = supabaseServerActionClient();
-    const result = await supabase.auth.signInWithPassword({
-        ...input,
-    });
-    if (result.error) throw result.error;
 
-    revalidatePath('/');
-    return result;
+    try {
+        const result = await supabase.auth.signInWithPassword({
+            ...input,
+        });
+        if (result.error) throw result.error;
+
+        revalidatePath('/');
+    } catch (error) {
+        return { errorMessage: getErrorMessage(error) };
+    }
 }
 
 export async function updateUserProfileAction({

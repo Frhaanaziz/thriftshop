@@ -38,9 +38,10 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
 
             toast.loading('Updating profile name...', { id });
 
-            await updateProfileAction({
+            const result = await updateProfileAction({
                 profile: { ...profile, fullName: changedName },
             });
+            if (result.error) throw new Error(result.error.message);
 
             toast.success('Update profile name successfully', { id });
         } catch (error) {

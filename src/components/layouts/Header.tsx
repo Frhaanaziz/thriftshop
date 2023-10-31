@@ -6,7 +6,7 @@ import CartHeader from '../cart/CartHeader';
 import Link from 'next/link';
 
 import DropdownHeader from './DropdownHeader';
-import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
+// import UploadDummyDataButton from '@app/_actions/dummy/uploadDummyDataButton';
 import { getUserAction } from '@app/_actions/user';
 
 const Header = async () => {
@@ -16,7 +16,7 @@ const Header = async () => {
             <div className="container flex h-16 justify-between items-center">
                 <HeaderSheet />
                 <Navbar />
-                {author_id && <UploadDummyDataButton author_id={author_id} />}
+                {/* {author_id && <UploadDummyDataButton author_id={author_id} />} */}
                 <div className="flex gap-3">
                     <SearchHeader />
                     <CartHeader />

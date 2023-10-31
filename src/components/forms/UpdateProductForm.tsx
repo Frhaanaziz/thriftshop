@@ -22,7 +22,6 @@ import { useId, useState } from 'react';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
-import image from 'next/image';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -94,7 +93,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                 );
             }
 
-            await updateProductAction({
+            const result = await updateProductAction({
                 input: {
                     id: product.id,
                     author_id: product.author_id,
@@ -108,6 +107,7 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
                     product_images: productImageUrl,
                 },
             });
+            if (result.error) throw new Error(result.error.message);
 
             toast.success('Successfully create your product', { id });
         } catch (error) {
@@ -122,13 +122,14 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
             setIsLoading(true);
             toast.loading('Deleting your product', { id });
 
-            await deleteProductAction({
+            const result = await deleteProductAction({
                 input: {
                     author_id: product.author_id,
                     id: product.id,
                     store_id: product.store_id,
                 },
             });
+            if (result.error) throw new Error(result.error.message);
 
             toast.success('Product deleted successfully', { id });
             router.replace(`/dashboard/stores/${product.store_id}/products`);

@@ -37,7 +37,9 @@ const SignupForm = () => {
     async function onSubmit(formData: z.infer<typeof signUpSchema>) {
         try {
             const { email, password, fullName } = formData;
-            await signUpUserAction({ fullName, input: { email, password } });
+
+            const { errorMessage } = await signUpUserAction({ fullName, input: { email, password } });
+            if (errorMessage) throw new Error(errorMessage);
 
             toast.success('Check your email for confirmation');
         } catch (error: any) {

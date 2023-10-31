@@ -21,6 +21,7 @@ import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs
 import { Database } from '@database/database.types';
 import { useId, useState } from 'react';
 import { Stores } from '@types';
+import error from 'next/error';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -84,7 +85,7 @@ const NewProductForm = ({
                 );
             }
 
-            await uploadProductAction({
+            const result = await uploadProductAction({
                 input: {
                     author_id,
                     store_id,
@@ -97,6 +98,7 @@ const NewProductForm = ({
                     product_images: productImageUrl,
                 },
             });
+            if (result.error) throw new Error(result.error.message);
 
             reset();
             toast.success('Product created successfully', { id });

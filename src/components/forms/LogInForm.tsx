@@ -35,7 +35,8 @@ const LogInForm = () => {
     async function onSubmit(formData: z.infer<typeof emailSchema>) {
         const { email, password } = formData;
         try {
-            await signInUserAction({ input: { email, password } });
+            const result = await signInUserAction({ input: { email, password } });
+            if (result?.errorMessage) throw new Error(result.errorMessage);
 
             router.replace('/', { scroll: false });
             toast.success('Login successful');

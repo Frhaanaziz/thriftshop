@@ -23,8 +23,9 @@ export async function getProductsAction({ input }: { input: Products['Update'] }
 
 export async function uploadProductAction({ input }: { input: Products['Insert'] }) {
     const supabase = supabaseServerActionClient();
+
     const result = await supabase.from('products').insert(input);
-    if (result.error) throw result.error;
+    if (result.error) result.error.message = 'Failed to upload product.';
 
     revalidatePath('/dashboard/stores/[storeId]/products', 'page');
     return result;
@@ -38,8 +39,9 @@ export async function deleteProductAction({
     path?: string;
 }) {
     const supabase = supabaseServerActionClient();
+
     const result = await supabase.from('products').delete().match(input);
-    if (result.error) throw result.error;
+    if (result.error) result.error.message = 'Failed to delete product.';
 
     path && revalidatePath(path);
     return result;
@@ -47,8 +49,9 @@ export async function deleteProductAction({
 
 export async function updateProductAction({ input }: { input: Products['Insert'] }) {
     const supabase = supabaseServerActionClient();
+
     const result = await supabase.from('products').upsert(input);
-    if (result.error) throw result.error;
+    if (result.error) result.error.message = 'Failed to update product.';
 
     revalidatePath('/dashboard/stores/[storeId]/products', 'page');
     return result;
