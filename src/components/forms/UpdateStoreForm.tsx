@@ -11,16 +11,18 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Stores } from '@types';
-import DeleteStoreButton from './DeleteStoreButton';
+import DeleteStoreButton from '../DeleteStoreButton';
 import { updateStoreSchema } from '@lib/validations/store';
 import { updateStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
-import { useId } from 'react';
+import { useId, useTransition } from 'react';
+import { Loader2 } from 'lucide-react';
 
-const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
+const UpdateStoreForm = ({ currentStore }: { currentStore: Stores['Row'] }) => {
     const { author_id, description, id, name } = currentStore;
 
-    const toastId = useId();
+    const toastId = useId()
+    const [isUpdating, startTransition] = useTransition()
 
     const defaultValues = { name, description: description ?? '' };
 
@@ -34,16 +36,18 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
         if (JSON.stringify(formData) === JSON.stringify(defaultValues))
             return toast.error('You did not change anything', { id: toastId });
 
-        try {
-            toast.loading('Updating your store...', { id: toastId });
+        startTransition(async () => {
+            try {
+                toast.loading('Updating your store...', { id: toastId });
 
-            const result = await updateStoreAction({ input: { ...formData, author_id, id } });
-            if (result.error) throw new Error(result.error.message);
+                const result = await updateStoreAction({ input: { ...formData, author_id, id } });
+                if (result.error) throw new Error(result.error.message);
 
-            toast.success('Successfully update your store', { id: toastId });
-        } catch (error) {
-            catchError(error, toastId);
-        }
+                toast.success('Successfully update your store', { id: toastId });
+            } catch (error) {
+                catchError(error, toastId);
+            }
+        })
     }
 
     return (
@@ -61,6 +65,7 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
                             <FormField
                                 control={control}
                                 name="name"
+                                disabled={isUpdating}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
@@ -79,6 +84,7 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
                             <FormField
                                 control={control}
                                 name="description"
+                                disabled={isUpdating}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Description</FormLabel>
@@ -96,10 +102,11 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
                         </div>
                     </CardContent>
                     <CardFooter className="space-x-2">
-                        <Button size="sm">Update store</Button>
+                        <Button size="sm" disabled={isUpdating}> {isUpdating && <Loader2 className='w-4 h-4 mr-1 animate-spin' />} Update store</Button>
                         <DeleteStoreButton
                             author_id={author_id}
                             id={id}
+                            disabled={isUpdating}
                         />
                     </CardFooter>
                 </form>
@@ -108,4 +115,4 @@ const UpdateStoreCard = ({ currentStore }: { currentStore: Stores['Row'] }) => {
     );
 };
 
-export default UpdateStoreCard;
+export default UpdateStoreForm;

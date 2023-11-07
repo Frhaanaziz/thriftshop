@@ -13,22 +13,25 @@ import { Button } from '@/components/ui/button';
 import { deleteStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 import { Stores } from '@types';
-import { useId } from 'react';
+import { useId, useTransition } from 'react';
 import toast from 'react-hot-toast';
 
-const DeleteStoreButton = ({ id, author_id }: Pick<Stores['Row'], 'id' | 'author_id'>) => {
+const DeleteStoreButton = ({ id, author_id, disabled }: Pick<Stores['Row'], 'id' | 'author_id'> & { disabled: boolean }) => {
     const toastId = useId();
+    const [isDeleting, startTransition] = useTransition();
 
-    async function handleDeleteStore() {
-        try {
-            toast.loading('Deleting your store...', { id: toastId });
+    function handleDeleteStore() {
+        startTransition(async () => {
+            try {
+                toast.loading('Deleting your store...', { id: toastId });
 
-            await deleteStoreAction({ input: { id, author_id } });
+                await deleteStoreAction({ input: { id, author_id } });
 
-            toast.success('Successfully deleted your store', { id: toastId });
-        } catch (error) {
-            catchError(error, toastId);
-        }
+                toast.success('Successfully deleted your store', { id: toastId });
+            } catch (error) {
+                catchError(error, toastId);
+            }
+        })
     }
 
     return (
@@ -38,6 +41,7 @@ const DeleteStoreButton = ({ id, author_id }: Pick<Stores['Row'], 'id' | 'author
                     type="button"
                     size="sm"
                     variant="destructive"
+                    disabled={disabled || isDeleting}
                 >
                     Delete store
                 </Button>

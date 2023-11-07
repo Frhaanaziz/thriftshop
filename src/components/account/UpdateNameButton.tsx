@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@components/ui/button';
 import { Profiles } from '@types';
-import { FormEvent, useId, useState } from 'react';
+import { FormEvent, useId, useState, useTransition } from 'react';
 
 import {
     Dialog,
@@ -25,7 +25,7 @@ type UpdateNameButtonProps = {
 
 const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
     const [changedName, setChangedName] = useState<string>(profile?.fullName);
-    const [isUpdating, setIsUpdating] = useState<boolean>(false);
+    const [isUpdating, startTransition] = useTransition();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const id = useId();
 
@@ -33,22 +33,20 @@ const UpdateNameButton = ({ profile }: UpdateNameButtonProps) => {
         e.preventDefault();
         setIsOpen(false);
 
-        try {
-            setIsUpdating(true);
+        startTransition(async () => {
+            try {
+                toast.loading('Updating profile name...', { id });
 
-            toast.loading('Updating profile name...', { id });
+                const result = await updateProfileAction({
+                    profile: { ...profile, fullName: changedName },
+                });
+                if (result.error) throw new Error(result.error.message);
 
-            const result = await updateProfileAction({
-                profile: { ...profile, fullName: changedName },
-            });
-            if (result.error) throw new Error(result.error.message);
-
-            toast.success('Update profile name successfully', { id });
-        } catch (error) {
-            catchError(error, id);
-        } finally {
-            setIsUpdating(false);
-        }
+                toast.success('Update profile name successfully', { id });
+            } catch (error) {
+                catchError(error, id);
+            }
+        })
     }
 
     return (

@@ -5,49 +5,47 @@ import { Input } from '@components/ui/input';
 import { catchError } from '@lib/utils';
 import { updateCartItemSchema } from '@lib/validations/cart';
 import { MinusIcon, PlusIcon, Trash2 } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useId, useTransition } from 'react';
 import toast from 'react-hot-toast';
 import z from 'zod';
 
 type Inputs = z.infer<typeof updateCartItemSchema>;
 
 const CartCounter = ({ productId, quantity }: { productId: string; quantity: number }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, startTransition] = useTransition()
     const id = useId();
 
-    async function onSubmit(data: Inputs) {
-        try {
-            setIsLoading(true);
-            toast.loading('Updating cart...', { id });
+    function onSubmit(data: Inputs) {
+        startTransition(async () => {
+            try {
+                toast.loading('Updating cart...', { id });
 
-            const result = await updateCartItemQuantityAction({
-                productId,
-                quantity: data.quantity,
-            });
-            if (result?.errorMessage) throw new Error(result.errorMessage);
+                const result = await updateCartItemQuantityAction({
+                    productId,
+                    quantity: data.quantity,
+                });
+                if (result?.errorMessage) throw new Error(result.errorMessage);
 
-            toast.success('Cart updated.', { id });
-        } catch (err) {
-            catchError(err, id);
-        } finally {
-            setIsLoading(false);
-        }
+                toast.success('Cart updated.', { id });
+            } catch (err) {
+                catchError(err, id);
+            }
+        })
     }
 
-    async function handleDeleteCartitem() {
-        try {
-            setIsLoading(true);
-            toast.loading('Deleting cart item...', { id });
+    function handleDeleteCartitem() {
+        startTransition(async () => {
+            try {
+                toast.loading('Deleting cart item...', { id });
 
-            const result = await deleteCartItemAction({ productId, quantity });
-            if (result?.errorMessage) throw new Error(result.errorMessage);
+                const result = await deleteCartItemAction({ productId, quantity });
+                if (result?.errorMessage) throw new Error(result.errorMessage);
 
-            toast.success('Cart item deleted.', { id });
-        } catch (error) {
-            catchError(error, id);
-        } finally {
-            setIsLoading(false);
-        }
+                toast.success('Cart item deleted.', { id });
+            } catch (error) {
+                catchError(error, id);
+            }
+        })
     }
 
     return (

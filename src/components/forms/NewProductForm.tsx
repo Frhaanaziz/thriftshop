@@ -19,9 +19,8 @@ import { uploadProductAction } from '@app/_actions/product';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
-import { useId, useState } from 'react';
+import { useId, useTransition } from 'react';
 import { Stores } from '@types';
-import error from 'next/error';
 
 const subCategoryValue = (value: string): string[] | undefined => {
     let subCategoryy: string[] | undefined;
@@ -44,8 +43,7 @@ const NewProductForm = ({
     storeId: Stores['Row']['id'];
     author_id: User['id'];
 }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const [isLoading, startTransition] = useTransition()
     const id = useId();
 
     const form = useForm<z.infer<typeof newProductSchema>>({
@@ -62,51 +60,50 @@ const NewProductForm = ({
     });
     const { handleSubmit, control, watch, setValue, reset } = form;
 
-    async function onSubmit(formData: z.infer<typeof newProductSchema>) {
+    function onSubmit(formData: z.infer<typeof newProductSchema>) {
         const { category, inventory, name, price, sub_category, description } = formData;
         let productImageUrl: string[] | null = null;
 
-        try {
-            setIsLoading(true);
-            toast.loading('Creating your product', { id });
+        startTransition(async () => {
+            try {
+                toast.loading('Creating your product', { id });
 
-            if (formData.image.length > 0) {
-                const results = await uploadProductImages({
-                    supabase,
-                    files: formData.image,
-                    storeId: store_id,
+                if (formData.image.length > 0) {
+                    const results = await uploadProductImages({
+                        supabase,
+                        files: formData.image,
+                        storeId: store_id,
+                    });
+
+                    productImageUrl = results.map(
+                        (result) =>
+                            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product_images/${result.data!.path
+                            }`
+                    );
+                }
+
+                const result = await uploadProductAction({
+                    input: {
+                        author_id,
+                        store_id,
+                        category,
+                        inventory,
+                        name,
+                        price,
+                        sub_category,
+                        description,
+                        product_images: productImageUrl,
+                    },
                 });
+                if (result.error) throw new Error(result.error.message);
 
-                productImageUrl = results.map(
-                    (result) =>
-                        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product_images/${
-                            result.data!.path
-                        }`
-                );
+                reset();
+                toast.success('Product created successfully', { id });
+            } catch (error) {
+                catchError(error, id);
             }
+        })
 
-            const result = await uploadProductAction({
-                input: {
-                    author_id,
-                    store_id,
-                    category,
-                    inventory,
-                    name,
-                    price,
-                    sub_category,
-                    description,
-                    product_images: productImageUrl,
-                },
-            });
-            if (result.error) throw new Error(result.error.message);
-
-            reset();
-            toast.success('Product created successfully', { id });
-        } catch (error) {
-            catchError(error, id);
-        } finally {
-            setIsLoading(false);
-        }
     }
 
     return (

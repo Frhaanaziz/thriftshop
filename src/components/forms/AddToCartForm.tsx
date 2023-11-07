@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
 import { Loader2, MinusIcon, PlusIcon } from 'lucide-react';
 import { addToCartAction } from '@app/_actions/cart';
-import { useId, useState } from 'react';
+import { useId, useTransition } from 'react';
 import { updateCartItemSchema } from '@lib/validations/cart';
 
 interface AddToCartFormProps {
@@ -22,7 +22,8 @@ type Inputs = z.infer<typeof updateCartItemSchema>;
 
 export function AddToCartForm({ productId }: AddToCartFormProps) {
     const id = useId();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, startTransition] = useTransition()
+
     const form = useForm<Inputs>({
         resolver: zodResolver(updateCartItemSchema),
         defaultValues: {
@@ -30,23 +31,22 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
         },
     });
 
-    async function onSubmit(data: Inputs) {
-        try {
-            setIsLoading(true);
-            toast.loading('Adding to cart...', { id });
+    function onSubmit(data: Inputs) {
+        startTransition(async () => {
+            try {
+                toast.loading('Adding to cart...', { id });
 
-            const result = await addToCartAction({
-                productId,
-                quantity: data.quantity,
-            });
-            if (result?.errorMessage) throw new Error(result.errorMessage);
+                const result = await addToCartAction({
+                    productId,
+                    quantity: data.quantity,
+                });
+                if (result?.errorMessage) throw new Error(result.errorMessage);
 
-            toast.success('Added to cart.', { id });
-        } catch (err) {
-            catchError(err, id);
-        } finally {
-            setIsLoading(false);
-        }
+                toast.success('Added to cart.', { id });
+            } catch (err) {
+                catchError(err, id);
+            }
+        })
     }
 
     return (
@@ -61,9 +61,8 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                         className={buttonVariants({
                             variant: 'outline',
                             size: 'icon',
-                            className: `h-8 w-8 rounded-r-none cursor-pointer ${
-                                isLoading && 'pointer-events-none'
-                            }`,
+                            className: `h-8 w-8 rounded-r-none cursor-pointer ${isLoading && 'pointer-events-none'
+                                }`,
                         })}
                         onClick={() => form.setValue('quantity', form.getValues('quantity') - 1)}
                     >
@@ -103,9 +102,8 @@ export function AddToCartForm({ productId }: AddToCartFormProps) {
                         className={buttonVariants({
                             variant: 'outline',
                             size: 'icon',
-                            className: `h-8 w-8 rounded-l-none cursor-pointer ${
-                                isLoading && 'pointer-events-none'
-                            }`,
+                            className: `h-8 w-8 rounded-l-none cursor-pointer ${isLoading && 'pointer-events-none'
+                                }`,
                         })}
                         onClick={() => form.setValue('quantity', form.getValues('quantity') + 1)}
                     >

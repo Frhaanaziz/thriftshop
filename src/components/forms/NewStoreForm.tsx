@@ -14,12 +14,14 @@ import { newStoreSchema } from '@lib/validations/store';
 import { addStoreAction } from '@app/_actions/store';
 import { catchError } from '@lib/utils';
 import { User } from '@supabase/supabase-js';
-import { useId } from 'react';
+import { useId, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
     const id = useId();
     const router = useRouter();
+    const [isSubmitting, startTransition] = useTransition();
 
     const form = useForm<z.infer<typeof newStoreSchema>>({
         resolver: zodResolver(newStoreSchema),
@@ -30,19 +32,21 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
     });
     const { handleSubmit, control, reset } = form;
 
-    async function onSubmit({ name, description }: z.infer<typeof newStoreSchema>) {
-        try {
-            toast.loading('Creating your store...', { id });
+    function onSubmit({ name, description }: z.infer<typeof newStoreSchema>) {
+        startTransition(async () => {
+            try {
+                toast.loading('Creating your store...', { id });
 
-            const result = await addStoreAction({ input: { author_id, name, description } });
-            if (result.error) throw new Error(result.error.message);
+                const result = await addStoreAction({ input: { author_id, name, description } });
+                if (result.error) throw new Error(result.error.message);
 
-            reset();
-            toast.success('Successfully create your store', { id });
-            router.push('/dashboard/stores');
-        } catch (error) {
-            catchError(error, id);
-        }
+                reset();
+                toast.success('Successfully create your store', { id });
+                router.push('/dashboard/stores');
+            } catch (error) {
+                catchError(error, id);
+            }
+        })
     }
 
     return (
@@ -58,6 +62,7 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
                             <FormField
                                 control={control}
                                 name="name"
+                                disabled={isSubmitting}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
@@ -75,6 +80,7 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
                             <FormField
                                 control={control}
                                 name="description"
+                                disabled={isSubmitting}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Description</FormLabel>
@@ -94,7 +100,9 @@ const NewStoreForm = ({ author_id }: { author_id: User['id'] }) => {
                         <Button
                             type="submit"
                             size="sm"
+                            disabled={isSubmitting}
                         >
+                            {isSubmitting && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
                             Add Store
                         </Button>
                     </CardFooter>

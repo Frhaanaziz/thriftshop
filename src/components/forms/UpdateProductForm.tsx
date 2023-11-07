@@ -18,7 +18,7 @@ import { categories, sub_category } from '@lib/constant';
 import { deleteProductAction, updateProductAction } from '@app/_actions/product';
 import { Products } from '@types';
 import { useRouter } from 'next/navigation';
-import { useId, useState } from 'react';
+import { useId, useTransition } from 'react';
 import { catchError, uploadProductImages } from '@lib/utils';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@database/database.types';
@@ -38,7 +38,7 @@ const subCategoryValue = (value: string): string[] | undefined => {
 const supabase = createClientComponentClient<Database>();
 
 const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, startTransition] = useTransition()
 
     const router = useRouter();
     const id = useId();
@@ -67,77 +67,75 @@ const UpdateProductForm = ({ product }: { product: Products['Row'] }) => {
     });
     const { handleSubmit, control, watch, setValue } = form;
 
-    async function onSubmit(formData: z.infer<typeof updateProductSchema>) {
+    function onSubmit(formData: z.infer<typeof updateProductSchema>) {
         if (JSON.stringify(formData) === JSON.stringify(defaultValues))
             return toast.error('You have not changed anything', { id });
 
         const { category, inventory, name, price, sub_category, description } = formData;
         let productImageUrl: string[] | null = null;
 
-        try {
-            setIsLoading(true);
-            toast.loading('Updating your product', { id });
+        startTransition(async () => {
+            try {
+                toast.loading('Updating your product', { id });
 
-            if (formData.image.length > 0) {
-                const results = await uploadProductImages({
-                    supabase,
-                    files: formData.image,
-                    storeId: product.store_id,
+                if (formData.image.length > 0) {
+                    const results = await uploadProductImages({
+                        supabase,
+                        files: formData.image,
+                        storeId: product.store_id,
+                    });
+
+                    productImageUrl = results.map(
+                        (result) =>
+                            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product_images/${result.data!.path
+                            }`
+                    );
+                }
+
+                const result = await updateProductAction({
+                    input: {
+                        id: product.id,
+                        author_id: product.author_id,
+                        store_id: product.store_id,
+                        category,
+                        inventory,
+                        name,
+                        price,
+                        sub_category,
+                        description: description ?? '',
+                        product_images: productImageUrl,
+                    },
                 });
+                if (result.error) throw new Error(result.error.message);
 
-                productImageUrl = results.map(
-                    (result) =>
-                        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product_images/${
-                            result.data!.path
-                        }`
-                );
+                toast.success('Successfully create your product', { id });
+            } catch (error) {
+                catchError(error, id);
             }
-
-            const result = await updateProductAction({
-                input: {
-                    id: product.id,
-                    author_id: product.author_id,
-                    store_id: product.store_id,
-                    category,
-                    inventory,
-                    name,
-                    price,
-                    sub_category,
-                    description: description ?? '',
-                    product_images: productImageUrl,
-                },
-            });
-            if (result.error) throw new Error(result.error.message);
-
-            toast.success('Successfully create your product', { id });
-        } catch (error) {
-            catchError(error, id);
-        } finally {
-            setIsLoading(false);
-        }
+        })
     }
 
-    async function handleDeleteProduct() {
-        try {
-            setIsLoading(true);
-            toast.loading('Deleting your product', { id });
+    function handleDeleteProduct() {
+        startTransition(async () => {
+            try {
+                toast.loading('Deleting your product', { id });
 
-            const result = await deleteProductAction({
-                input: {
-                    author_id: product.author_id,
-                    id: product.id,
-                    store_id: product.store_id,
-                },
-            });
-            if (result.error) throw new Error(result.error.message);
+                const result = await deleteProductAction({
+                    input: {
+                        author_id: product.author_id,
+                        id: product.id,
+                        store_id: product.store_id,
+                    },
+                });
+                if (result.error) throw new Error(result.error.message);
 
-            toast.success('Product deleted successfully', { id });
-            router.replace(`/dashboard/stores/${product.store_id}/products`);
-        } catch (error) {
-            catchError(error, id);
-        } finally {
-            setIsLoading(false);
-        }
+                toast.success('Product deleted successfully', { id });
+                router.replace(`/dashboard/stores/${product.store_id}/products`);
+            } catch (error) {
+                catchError(error, id);
+            }
+        })
+
     }
 
     return (

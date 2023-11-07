@@ -1,7 +1,7 @@
-import UpdateStoreCard from '../../../../../components/UpdateStoreCard';
 import { notFound } from 'next/navigation';
 import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';
+import UpdateStoreForm from '@components/forms/UpdateStoreForm';
 
 type StoreManageProps = {
     params: { storeId: string };
@@ -31,7 +31,7 @@ const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
                 </CardFooter>
             </Card> */}
 
-            <UpdateStoreCard currentStore={currentStore} />
+            <UpdateStoreForm currentStore={currentStore} />
         </div>
     );
 };

@@ -14,9 +14,11 @@ import { Input } from '@components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@components/ui/form';
 import { catchError } from '@lib/utils';
+import { useTransition } from 'react';
 
 const LogInForm = () => {
-    const router = useRouter();
+    const router = useRouter()
+    const [isLoading, startTransition] = useTransition()
 
     const form = useForm<z.infer<typeof emailSchema>>({
         resolver: zodResolver(emailSchema),
@@ -32,17 +34,19 @@ const LogInForm = () => {
         formState: { isSubmitting },
     } = form;
 
-    async function onSubmit(formData: z.infer<typeof emailSchema>) {
+    function onSubmit(formData: z.infer<typeof emailSchema>) {
         const { email, password } = formData;
-        try {
-            const result = await signInUserAction({ input: { email, password } });
-            if (result?.errorMessage) throw new Error(result.errorMessage);
+        startTransition(async () => {
+            try {
+                const result = await signInUserAction({ input: { email, password } });
+                if (result?.errorMessage) throw new Error(result.errorMessage);
 
-            router.replace('/', { scroll: false });
-            toast.success('Login successful');
-        } catch (error) {
-            catchError(error);
-        }
+                router.replace('/', { scroll: false });
+                toast.success('Login successful');
+            } catch (error) {
+                catchError(error);
+            }
+        })
     }
 
     return (
@@ -65,7 +69,7 @@ const LogInForm = () => {
                                         autoCapitalize="none"
                                         autoComplete="email"
                                         autoCorrect="off"
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -87,7 +91,7 @@ const LogInForm = () => {
                                         autoCapitalize="none"
                                         autoComplete="password"
                                         autoCorrect="off"
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || isLoading}
                                         {...field}
                                     />
                                 </FormControl>
@@ -98,10 +102,10 @@ const LogInForm = () => {
 
                     <Button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isLoading}
                         className="w-full"
                     >
-                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {(isSubmitting || isLoading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Sign In with Email
                     </Button>
                 </form>
@@ -112,7 +116,7 @@ const LogInForm = () => {
                 className={buttonVariants({
                     variant: 'ghost',
                     size: 'lg',
-                    className: `border ${isSubmitting && 'pointer-events-none'}`,
+                    className: `border ${(isSubmitting || isLoading) && 'pointer-events-none'}`,
                 })}
             >
                 Sign Up
