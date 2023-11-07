@@ -1,7 +1,7 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import UpdateProductForm from '../../../../../../../components/forms/UpdateProductForm';
 import { getProductAction } from '@app/_actions/product';
 import { getUserAction } from '@app/_actions/user';
+import UpdateProductForm from '@components/forms/UpdateProductForm';
 import { notFound } from 'next/navigation';
 
 const UpdateProductPage = async ({

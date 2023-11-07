@@ -2,10 +2,21 @@ import { notFound } from 'next/navigation';
 import { getUserStoresAction } from '@app/_actions/store';
 import { getUserAction } from '@app/_actions/user';
 import UpdateStoreForm from '@components/forms/UpdateStoreForm';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 type StoreManageProps = {
     params: { storeId: string };
 };
+
+export const revalidate = 604800
+
+export async function generateStaticParams() {
+    const supabase = createClientComponentClient()
+    const { data } = await supabase.from('stores').select('id')
+    if (!data) return []
+
+    return data.map(store => ({ storeId: store.id }))
+}
 
 const StoreManagePage = async ({ params: { storeId } }: StoreManageProps) => {
     const author_id = (await getUserAction())?.id;

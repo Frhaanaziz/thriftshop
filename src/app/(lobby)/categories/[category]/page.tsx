@@ -1,6 +1,7 @@
 import { toSentenceCase } from '@lib/utils';
 import { supabaseServerComponentClient } from '@database/supabase';
 import Products from '@components/Products';
+import { categories } from '@lib/constant';
 
 interface CategoryPageProps {
     params: {
@@ -9,6 +10,10 @@ interface CategoryPageProps {
     searchParams: {
         [key: string]: string | string[] | undefined;
     };
+}
+
+export async function generateStaticParams() {
+    return categories.map(category => ({ category: category.toLowerCase() }))
 }
 
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
