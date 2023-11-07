@@ -1,7 +1,7 @@
-import SelectStoreCombobox from '../../../../components/SelectStoreCombobox';
+import SelectStoreCombobox from '../../../../../components/SelectStoreCombobox';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
-import LayoutNavList from '../../../../components/layouts/LayoutNavList';
+import LayoutNavList from '../../../../../components/layouts/LayoutNavList';
 import { getUserAction } from '@app/_actions/user';
 import { getUserStoresAction } from '@app/_actions/store';
 

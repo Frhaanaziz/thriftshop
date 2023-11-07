@@ -1,7 +1,7 @@
 import { buttonVariants } from '@components/ui/button';
 import { Rocket } from 'lucide-react';
 import Link from 'next/link';
-import StoreCard from '../../../components/cards/StoreCard';
+import StoreCard from '../../../../components/cards/StoreCard';
 import { getUserAction } from '@app/_actions/user';
 import { notFound } from 'next/navigation';
 import { supabaseServerComponentClient } from '@database/supabase';

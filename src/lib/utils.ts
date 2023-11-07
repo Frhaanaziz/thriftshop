@@ -12,6 +12,14 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
+export function slugify(str: string) {
+    return str
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '')
+        .replace(/--+/g, '-');
+}
+
 export function formatPrice(
     price: number | string,
     options: {
@@ -34,14 +42,6 @@ export function formatDate(date: Date | string | number) {
         day: 'numeric',
         year: 'numeric',
     }).format(new Date(date));
-}
-
-export function slugify(str: string) {
-    return str
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '-');
 }
 
 export function toTitleCase(str: string) {

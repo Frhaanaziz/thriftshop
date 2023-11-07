@@ -1,9 +1,9 @@
 import { DEFAULT_PROFILE_URL } from '@lib/constant';
 import Image from 'next/image';
-import UpdateProfileButton from '../../../components/account/UpdateProfileButton';
-import UpdateEmailButton from '../../../components/account/UpdateEmailButton';
+import UpdateProfileButton from '../../../../components/account/UpdateProfileButton';
+import UpdateEmailButton from '../../../../components/account/UpdateEmailButton';
 import { notFound } from 'next/navigation';
-import UpdateNameButton from '../../../components/account/UpdateNameButton';
+import UpdateNameButton from '../../../../components/account/UpdateNameButton';
 import { getProfileAction, getUserAction } from '@app/_actions/user';
 import { Avatar, AvatarImage, AvatarFallback } from '@components/ui/avatar';
 import { getInitials } from '@lib/utils';
