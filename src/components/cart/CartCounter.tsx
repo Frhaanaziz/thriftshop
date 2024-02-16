@@ -8,7 +8,7 @@ import { Input } from '@components/ui/input';
 import { catchError } from '@lib/utils';
 import { updateCartItemSchema } from '@lib/validations/cart';
 import { MinusIcon, PlusIcon, Trash2 } from 'lucide-react';
-import { useId, useOptimistic, useState, useTransition } from 'react';
+import { useId, useOptimistic, useState } from 'react';
 import toast from 'react-hot-toast';
 import z from 'zod';
 
